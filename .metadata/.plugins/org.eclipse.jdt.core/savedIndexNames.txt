@@ -1,0 +1,4 @@
+INDEX VERSION 1.134+C:\Users\junba\OneDrive\바탕 화면\학교\25학년 2학기\XML 프로그래밍\XML-FinalProject\.metadata\.plugins\org.eclipse.jdt.core
+2504429620.index
+1865797976.index
+1413359574.index
