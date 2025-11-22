@@ -1,0 +1,334 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.JScrollPane;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+
+import javax.swing.JTree;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
+import javax.swing.JRadioButton;
+import javax.swing.JPanel;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+
+public class InsertFrame {
+
+	private JFrame frame;
+	private JTextField NameTextField;
+	private JTextField ValueTextField;
+	private JTree tree;
+	private JButton InsertButton;
+	private JRadioButton InsertRadioButton_front;
+	private JRadioButton InsertRadioButton_back;
+	private JComboBox TypeComboBox;
+	private ButtonGroup group;
+
+	private Node selectedNode;
+	private String insertMode;
+	private String insertType;
+
+	public void setVisible(boolean b) {
+		frame.setVisible(b);
+	}
+
+	public void returnToMain() {
+		SwingUtilities.invokeLater(() -> {
+			JFrame toClose = this.frame; // 닫을 대상 보관
+			MainFrame main = new MainFrame();
+			main.setVisible(true); // 새 메인 띄우기
+			if (toClose != null)
+				toClose.dispose(); // 반드시 명시적으로 닫기
+		});
+	}
+
+	public InsertFrame() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 1120, 750);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+
+		if (!FileData.isLoaded()) {
+			JOptionPane.showMessageDialog(null, "No files have been loaded, please load the files first.", "ERROR",
+					JOptionPane.ERROR_MESSAGE);
+			returnToMain();
+			return;
+		}
+
+		JLabel InsertLabel = new JLabel("Insert");
+		InsertLabel.setFont(new Font("굴림", Font.PLAIN, 24));
+		InsertLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		InsertLabel.setBounds(12, 10, 1080, 45);
+		frame.getContentPane().add(InsertLabel);
+
+		JLabel NameLabel = new JLabel("Node Name");
+		NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		NameLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		NameLabel.setBounds(601, 387, 130, 23);
+		frame.getContentPane().add(NameLabel);
+
+		JLabel ValueLabel = new JLabel("Node Value");
+		ValueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		ValueLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		ValueLabel.setBounds(602, 464, 130, 23);
+		frame.getContentPane().add(ValueLabel);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 65, 535, 611);
+		frame.getContentPane().add(scrollPane);
+
+		JLabel InsertionLabel = new JLabel("Select the insertion location");
+		InsertionLabel.setFont(new Font("굴림", Font.PLAIN, 20));
+		InsertionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		scrollPane.setColumnHeaderView(InsertionLabel);
+
+		DefaultMutableTreeNode rootNode = DOMTreeBuilder.buildTree(FileData.document.getDocumentElement());
+		tree = new JTree(rootNode);
+		scrollPane.setViewportView(tree);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
+			public void valueChanged(TreeSelectionEvent e) {
+				InitAll();
+				TreePath path = tree.getSelectionPath();
+				if (path == null)
+					return;
+
+				DefaultMutableTreeNode selectedTreeNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+				Object userObject = selectedTreeNode.getUserObject();
+
+				if (userObject instanceof Node) {
+					System.out.println("event activated");
+					Node getNode = (Node) userObject;
+
+					setInsertInfo(getNode);
+				}
+			}
+
+		});
+
+		String[] TypeList = { "ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT" };
+
+		NameTextField = new JTextField();
+		NameTextField.setEnabled(false);
+		NameTextField.setBounds(737, 382, 267, 35);
+		frame.getContentPane().add(NameTextField);
+		NameTextField.setColumns(10);
+
+		ValueTextField = new JTextField();
+		ValueTextField.setEnabled(false);
+		ValueTextField.setBounds(626, 493, 378, 45);
+		frame.getContentPane().add(ValueTextField);
+		ValueTextField.setColumns(10);
+
+		JButton UpdateButton = new JButton("Update");
+		UpdateButton.setBounds(226, 678, 97, 23);
+		UpdateButton.addActionListener(e -> UpdateJTree());
+		frame.getContentPane().add(UpdateButton);
+
+		InsertButton = new JButton("Insert");
+		InsertButton.setEnabled(false);
+		InsertButton.setFont(new Font("굴림", Font.PLAIN, 20));
+		InsertButton.addActionListener(e -> Insert());
+		InsertButton.setBounds(758, 581, 127, 45);
+
+		frame.getContentPane().add(InsertButton);
+		frame.setLocationRelativeTo(null);
+
+		JButton finBtn = new JButton("Back to main");
+		finBtn.setFont(new Font("굴림", Font.PLAIN, 18));
+		finBtn.setBounds(922, 676, 170, 25);
+		finBtn.addActionListener(e -> returnToMain());
+		frame.getContentPane().add(finBtn);
+
+		JPanel subPanel = new JPanel();
+		subPanel.setBackground(new Color(192, 192, 192));
+		subPanel.setBounds(601, 77, 434, 216);
+		frame.getContentPane().add(subPanel);
+		subPanel.setLayout(null);
+
+		JLabel ModeLabel = new JLabel("Insert Mode");
+		ModeLabel.setBounds(31, 10, 364, 25);
+		subPanel.add(ModeLabel);
+		ModeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		ModeLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+
+		JPanel panel = new JPanel();
+		panel.setBounds(38, 56, 364, 45);
+		subPanel.add(panel);
+		panel.setLayout(null);
+
+		InsertRadioButton_front = new JRadioButton("Insert Front");
+		InsertRadioButton_front.setEnabled(false);
+		InsertRadioButton_front.setFont(new Font("굴림", Font.PLAIN, 18));
+		InsertRadioButton_front.setHorizontalAlignment(SwingConstants.CENTER);
+		InsertRadioButton_front.setBounds(8, 5, 157, 34);
+		InsertRadioButton_front.setActionCommand("FRONT");
+		panel.add(InsertRadioButton_front);
+
+		InsertRadioButton_back = new JRadioButton("Insert Back");
+		InsertRadioButton_back.setEnabled(false);
+		InsertRadioButton_back.setFont(new Font("굴림", Font.PLAIN, 18));
+		InsertRadioButton_back.setHorizontalAlignment(SwingConstants.CENTER);
+		InsertRadioButton_back.setBounds(168, 5, 188, 34);
+		InsertRadioButton_back.setActionCommand("BACK");
+		panel.add(InsertRadioButton_back);
+
+		// InsertRadioButton_front.addActionListener(e -> InsertFront());
+		// InsertRadioButton_back.addActionListener(e -> InsertBack());
+
+		group = new ButtonGroup();
+		group.add(InsertRadioButton_back);
+		group.add(InsertRadioButton_front);
+		group.clearSelection();
+
+		JLabel TypeLabel = new JLabel("Type");
+		TypeLabel.setBounds(38, 128, 85, 23);
+		subPanel.add(TypeLabel);
+		TypeLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		TypeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+		TypeComboBox = new JComboBox(TypeList);
+		TypeComboBox.setBounds(135, 129, 267, 23);
+		subPanel.add(TypeComboBox);
+		TypeComboBox.setEnabled(false);
+
+		ActionListener insertModeListener = e -> {
+			ButtonModel selectedModel = group.getSelection();
+			if (selectedModel == null) {
+				JOptionPane.showMessageDialog(null, "please check again", "warining", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			InsertRadioButton_front.setEnabled(false);
+			InsertRadioButton_back.setEnabled(false);
+			TypeComboBox.setEnabled(false);
+			insertType = TypeComboBox.getSelectedItem().toString();
+			String command = e.getActionCommand();
+			switch (command) {
+			case "FRONT":
+				insertMode = "FRONT";
+				break;
+			case "BACK":
+				insertMode = "BACK";
+				break;
+			}
+			InsertSet();
+		};
+
+		JButton SetModeButton = new JButton("Set Insert Mode");
+		SetModeButton.setFont(new Font("굴림", Font.PLAIN, 18));
+		SetModeButton.setBounds(107, 183, 243, 23);
+		SetModeButton.addActionListener(insertModeListener);
+		subPanel.add(SetModeButton);
+	}
+
+	private void UpdateJTree() {
+		DefaultMutableTreeNode rootNode = DOMTreeBuilder.buildTree(FileData.document.getDocumentElement());
+		DefaultTreeModel model = new DefaultTreeModel(rootNode);
+		tree.setModel(model);
+	}
+
+	private void InitAll() {
+		selectedNode = null;
+		insertMode = "";
+		insertType = "";
+		group.clearSelection();
+		InsertRadioButton_front.setEnabled(false);
+		InsertRadioButton_back.setEnabled(false);
+		TypeComboBox.setSelectedIndex(0);
+		TypeComboBox.setEnabled(false);
+		NameTextField.setText("");
+		NameTextField.setEnabled(false);
+		ValueTextField.setText("");
+		ValueTextField.setEnabled(false);
+		InsertButton.setEnabled(false);
+	}
+
+	private void setInsertInfo(Node node) {
+		selectedNode = node;
+		InsertRadioButton_front.setEnabled(true);
+		InsertRadioButton_back.setEnabled(true);
+		TypeComboBox.setEnabled(true);
+	}
+
+	private void InsertSet() {
+		InsertButton.setEnabled(true);
+		switch (insertType) {
+		case "ELEMENT":
+			NameTextField.setEnabled(true);
+			break;
+		case "ATTRIBUTE":
+			break;
+		case "COMMENT":
+			break;
+		case "TEXT":
+			break;
+		}
+	}
+
+	private void Insert() {
+
+		switch (insertType) {
+		case "ELEMENT":
+			InsertElement();
+			break;
+		case "ATTRIBUTE":
+			break;
+		case "COMMENT":
+			break;
+		case "TEXT":
+			break;
+		}
+
+	}
+
+	private void InsertElement() {
+		Element ele = FileData.document.createElement(NameTextField.getText());
+		ele.appendChild(FileData.document.createTextNode(""));
+		
+		Node ParentNode = selectedNode.getParentNode();
+		if(ParentNode == null) {
+			JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
+		}
+		
+		if ("FRONT".equals(insertMode))
+		{
+			
+		
+		}
+		else if ("BACK".equals(insertMode))
+		{
+			
+		}
+	}
+}

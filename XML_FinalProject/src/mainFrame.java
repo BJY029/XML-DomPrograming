@@ -86,7 +86,7 @@ public class MainFrame {
 		JButton menu6_btn = new JButton("6. Insert");
 		menu6_btn.setFont(new Font("굴림", Font.PLAIN, 18));
 		menu6_btn.setBounds(360, 430, 330, 40);
-		//menu6_btn.addActionListener(e -> InsertAction());
+		menu6_btn.addActionListener(e -> InsertAction());
 		frame.getContentPane().add(menu6_btn);
 		
 		JButton menu7_btn = new JButton("7. Update");
@@ -146,6 +146,12 @@ public class MainFrame {
 	private void FindAction()
 	{
 		new FindFrame().setVisible(true);
+		frame.dispose();
+	}
+	
+	private void InsertAction()
+	{
+		new InsertFrame().setVisible(true);
 		frame.dispose();
 	}
 }

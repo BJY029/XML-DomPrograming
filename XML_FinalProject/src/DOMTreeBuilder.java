@@ -3,7 +3,7 @@ import org.w3c.dom.*;
 
 public class DOMTreeBuilder {
 	public static DefaultMutableTreeNode buildTree(Node node) {
-		DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(getNodeText(node));
+		DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(node);
 		
 		NodeList childList = node.getChildNodes();
 		for(int i = 0; i < childList.getLength(); i++) {
