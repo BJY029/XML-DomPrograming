@@ -1,0 +1,108 @@
+import java.awt.EventQueue;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import javax.swing.SwingUtilities;
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.JComboBox;
+
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.JTextField;
+
+public class FindFrame {
+
+	private JFrame frame;
+	private JTextField NameField;
+	private NodeList nodelist;
+
+	public FindFrame() {
+		initialize();
+	}
+	
+	public void setVisible(boolean b) {
+		frame.setVisible(b);
+	}
+
+	public void returnToMain() {
+		SwingUtilities.invokeLater(() -> {
+			JFrame toClose = this.frame; // 닫을 대상 보관
+			MainFrame main = new MainFrame();
+			main.setVisible(true); // 새 메인 띄우기
+			if (toClose != null)
+				toClose.dispose(); // 반드시 명시적으로 닫기
+		});
+	}
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 1120, 750);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JLabel TypeLabel = new JLabel("Type");
+		TypeLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		TypeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		TypeLabel.setBounds(159, 10, 89, 33);
+		frame.getContentPane().add(TypeLabel);
+		frame.setLocationRelativeTo(null);
+		
+		JLabel NameLabel = new JLabel("Name");
+		NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		NameLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		NameLabel.setBounds(482, 10, 89, 33);
+		frame.getContentPane().add(NameLabel);
+		
+		String[] TypeList = {"ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT"};
+		JComboBox comboBox = new JComboBox(TypeList);
+		comboBox.setBounds(254, 15, 188, 23);
+		frame.getContentPane().add(comboBox);
+		
+		NameField = new JTextField();
+		NameField.setFont(new Font("Gulim", Font.PLAIN, 12));
+		NameField.setBounds(573, 17, 223, 21);
+		frame.getContentPane().add(NameField);
+		NameField.setColumns(10);
+		
+		JButton SearchBtn = new JButton("Search");
+		SearchBtn.setBounds(819, 16, 97, 23);
+		SearchBtn.addActionListener(e -> Find(FileData.document.getDocumentElement(), comboBox.getSelectedItem().toString(), NameField.getText()));
+		frame.getContentPane().add(SearchBtn);
+		
+		JComboBox resultComboBox = new JComboBox();
+		resultComboBox.setBounds(363, 53, 287, 23);
+		frame.getContentPane().add(resultComboBox);
+		
+		JButton DetailsBtn = new JButton("Details");
+		DetailsBtn.setFont(new Font("굴림", Font.PLAIN, 14));
+		DetailsBtn.setBounds(457, 82, 97, 23);
+		frame.getContentPane().add(DetailsBtn);
+		
+	}
+	
+	private void Find(Node node, String Type,  String Name)
+	{
+		
+	}
+	
+	private void FindElement(Node node, String Name)
+	{
+		
+	}
+}

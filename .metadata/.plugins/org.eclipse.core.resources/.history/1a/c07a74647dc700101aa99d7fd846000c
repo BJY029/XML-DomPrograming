@@ -1,0 +1,146 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.nio.file.Path;
+import javax.swing.JButton;
+
+
+public class MainFrame {
+
+	private JFrame frame;
+	private JLabel LoadInfoLabel;
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainFrame window = new MainFrame();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public MainFrame() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 1080, 750);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.getContentPane().setLayout(null);
+		
+		JLabel TitleLabel = new JLabel("Document Editor");
+		TitleLabel.setFont(new Font("굴림", Font.PLAIN, 24));
+		TitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		TitleLabel.setBounds(12, 10, 1040, 31);
+		frame.getContentPane().add(TitleLabel);
+		
+		JButton menu1_btn = new JButton("1. Load");
+		menu1_btn.setFont(new Font("굴림", Font.PLAIN, 18));
+		menu1_btn.setBounds(360, 80, 330, 40);
+		menu1_btn.addActionListener(e -> LoadAction());
+		frame.getContentPane().add(menu1_btn);
+		
+		JButton menu2_btn = new JButton("2. Make");
+		menu2_btn.setFont(new Font("굴림", Font.PLAIN, 18));
+		menu2_btn.setBounds(360, 150, 330, 40);
+		//menu2_btn.addActionListener(e-> MakeAction());
+		frame.getContentPane().add(menu2_btn);
+		
+		JButton menu3_btn = new JButton("3. Find");
+		menu3_btn.setFont(new Font("굴림", Font.PLAIN, 18));
+		menu3_btn.setBounds(360, 220, 330, 40);
+		//menu3_btn.addActionListener(e -> FindAction());
+		frame.getContentPane().add(menu3_btn);
+		
+		JButton menu4_btn = new JButton("4. Save");
+		menu4_btn.setFont(new Font("굴림", Font.PLAIN, 18));
+		menu4_btn.setBounds(360, 290, 330, 40);
+		//menu4_btn.addActionListener(e-> SaveAction());
+		frame.getContentPane().add(menu4_btn);
+		
+		JButton menu5_btn = new JButton("5. Print");
+		menu5_btn.setFont(new Font("굴림", Font.PLAIN, 18));
+		menu5_btn.setBounds(360, 360, 330, 40);
+		menu5_btn.addActionListener(e -> PrintAction());
+		frame.getContentPane().add(menu5_btn);
+		
+		JButton menu6_btn = new JButton("6. Insert");
+		menu6_btn.setFont(new Font("굴림", Font.PLAIN, 18));
+		menu6_btn.setBounds(360, 430, 330, 40);
+		//menu6_btn.addActionListener(e -> InsertAction());
+		frame.getContentPane().add(menu6_btn);
+		
+		JButton menu7_btn = new JButton("7. Update");
+		menu7_btn.setFont(new Font("굴림", Font.PLAIN, 18));
+		menu7_btn.setBounds(360, 500, 330, 40);
+		//menu7_btn.addActionListener(e->UpdateAction());
+		frame.getContentPane().add(menu7_btn);
+		
+		JButton menu8_btn = new JButton("8. Delete");
+		menu8_btn.setFont(new Font("굴림", Font.PLAIN, 18));
+		menu8_btn.setBounds(360, 570, 330, 40);
+		//menu8_btn.addActionListener(e -> DeleteAction());
+		frame.getContentPane().add(menu8_btn);
+		
+		JButton menu9_btn = new JButton("9. Exit");
+		menu9_btn.setFont(new Font("굴림", Font.PLAIN, 18));
+		menu9_btn.setBounds(360, 640, 330, 40);
+		//menu9_btn.addActionListener(e -> BeforeExit());
+		frame.getContentPane().add(menu9_btn);
+		
+		LoadInfoLabel = new JLabel("New label");
+		LoadInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		LoadInfoLabel.setFont(new Font("Gulim", Font.PLAIN, 12));
+		LoadInfoLabel.setBounds(12, 51, 1040, 19);
+		frame.getContentPane().add(LoadInfoLabel);
+		isLoaded();
+	}
+	
+	private void isLoaded()
+	{
+		if(!FileData.isLoaded()) {
+			LoadInfoLabel.setText("Not loaded");
+		}
+		else {
+			LoadInfoLabel.setText("Loaded file: " + FileData.uri);
+		}
+			
+	}
+	
+	public void setVisible(boolean b)
+	{
+		frame.setVisible(b);
+		isLoaded();
+	}
+	
+	private void LoadAction()
+	{
+		new LoadFrame().setVisible(true);
+		frame.dispose();
+	}
+	
+	private void PrintAction()
+	{
+		new PrintFrame().setVisible(true);
+		frame.dispose();
+	}
+}

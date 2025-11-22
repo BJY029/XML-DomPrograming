@@ -1,0 +1,72 @@
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import javax.swing.SwingUtilities;
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.JComboBox;
+
+public class LoadFrame {
+	private JFrame frame;
+
+
+	public LoadFrame() {
+		initialize();
+	}
+
+	public void setVisible(boolean b)
+	{
+		frame.setVisible(b);
+	}
+	
+	public void returnToMain() {
+	    SwingUtilities.invokeLater(() -> {
+	        JFrame toClose = this.frame;            // 닫을 대상 보관
+	        MainFrame main = new MainFrame();
+	        main.setVisible(true);                  // 새 메인 띄우기
+	        if (toClose != null) toClose.dispose(); // 반드시 명시적으로 닫기
+	    });
+	}
+
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setLocationRelativeTo(null);
+		
+		JLabel TitleLabel = new JLabel("Load");
+		TitleLabel.setFont(new Font("굴림", Font.PLAIN, 24));
+		TitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		TitleLabel.setBounds(12, 10, 410, 27);
+		frame.getContentPane().add(TitleLabel);
+		
+		
+		JLabel lblNewLabel = new JLabel("Choose the name of the file to load.");
+		lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(12, 79, 410, 29);
+		frame.getContentPane().add(lblNewLabel);
+		
+		String[] XMLFiles = FileData.getXMLFileLists();
+		JComboBox comboBox = new JComboBox(XMLFiles);
+		comboBox.setBounds(86, 118, 260, 23);
+		frame.getContentPane().add(comboBox);
+		
+		JButton LoadBtn = new JButton("Load");
+		LoadBtn.setBounds(170, 176, 97, 23);
+		frame.getContentPane().add(LoadBtn);
+		//LoadBtn.addActionListener(e -> loadAction());
+	}
+}

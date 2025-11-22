@@ -1,0 +1,31 @@
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+
+public class LoadFrame {
+	private JFrame frame;
+
+
+	public LoadFrame() {
+		initialize();
+	}
+
+
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+	}
+
+}

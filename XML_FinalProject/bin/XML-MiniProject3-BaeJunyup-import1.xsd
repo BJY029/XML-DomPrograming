@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://ProjectScene.org"
+    xmlns="http://ProjectScene.org"
+    elementFormDefault="qualified">
+
+    <xsd:include schemaLocation="XML-MiniProject3-BaeJunyup-include1.xsd" />
+    <xsd:element name="scene">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="object" maxOccurs="unbounded" />
+            </xsd:sequence>
+            <xsd:attribute name="name" type="xsd:string" use="required" />
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

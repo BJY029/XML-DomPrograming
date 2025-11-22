@@ -1,0 +1,40 @@
+import javax.swing.tree.DefaultMutableTreeNode;
+import org.w3c.dom.*;
+
+public class DOMTreeBuilder {
+	public static DefaultMutableTreeNode buildTree(Node node) {
+		DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(getNodeText(node));
+		
+		NodeList childList = node.getChildNodes();
+		for(int i = 0; i < childList.getLength(); i++) {
+			Node child = childList.item(i);
+			
+			//공백 노드인 경우 포함시키지 않는다.
+			if(child.getNodeType() == Node.TEXT_NODE && child.getNodeValue().trim().length() == 0)
+				continue;
+			
+			treeNode.add(buildTree(child));
+		}
+		return treeNode;
+	}
+
+	//각 타입에 맞게 출력할 텍스트 반환
+	private static String getNodeText(Node node) {
+		switch (node.getNodeType()) {
+		case Node.ELEMENT_NODE:
+			return "<" + node.getNodeName() + ">";
+
+		case Node.ATTRIBUTE_NODE:
+			return "@" + node.getNodeName() + " = " + node.getNodeValue();
+
+		case Node.TEXT_NODE:
+			return node.getNodeName();
+
+		case Node.COMMENT_NODE:
+			return "<!--" + node.getNodeValue() + "-->";
+
+		default:
+			return node.getNodeName();
+		}
+	}
+}

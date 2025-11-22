@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://component.org"
+    xmlns="http://component.org"
+    elementFormDefault="qualified">
+
+    <xsd:element name="component" type="componentType" />
+
+
+    <xsd:complexType name="componentType">
+        <xsd:choice minOccurs="0">
+            <!--type=camera-->
+            <xsd:sequence>
+                <xsd:element name="FieldOfView" type="xsd:float" />
+                <xsd:element name="NearClip" type="xsd:float" />
+                <xsd:element name="FarClip" type="xsd:float" />
+            </xsd:sequence>
+
+            <!--type=Light-->
+            <xsd:sequence>
+                <xsd:element name="LightType" type="lightType" />
+                <xsd:element name="Intensity" type="xsd:float" />
+                <xsd:element name="Color" type="colorHexType" />
+            </xsd:sequence>
+
+            <!--type=Rigidbody-->
+            <xsd:sequence>
+                <xsd:element name="mass" type="xsd:float" />
+                <xsd:element name="isKinematic" type="xsd:boolean" />
+            </xsd:sequence>
+
+            <!--type=collider-->
+            <xsd:sequence>
+                <xsd:element name="coll_type" type="collType" />
+                <xsd:element name="isTrigger" type="xsd:boolean" />
+            </xsd:sequence>
+
+            <!--type=MeshRenderer-->
+            <xsd:sequence>
+                <xsd:element name="mesh_ref" type="xsd:string" />
+            </xsd:sequence>
+
+            <!--type=AudioSource-->
+            <xsd:sequence>
+                <xsd:element name="audio_ref" type="xsd:string" />
+                <xsd:element name="loop" type="xsd:boolean" />
+                <xsd:element name="playOnAwake" type="xsd:boolean" />
+            </xsd:sequence>
+
+            <!--type=Canvas-->
+            <xsd:sequence>
+                <xsd:element name="render_mode" type="renderType" />
+            </xsd:sequence>
+
+            <!--type="CanvasScaler"-->
+            <xsd:sequence>
+                <xsd:element name="scale_mode" type="scaleType" />
+            </xsd:sequence>
+
+            <!--type=script-->
+            <xsd:sequence>
+                <xsd:element name="name" type="xsd:string" />
+                <xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:simpleContent>
+                            <xsd:extension base="xsd:string">
+                                <xsd:attribute name="type" type="parameter" use="required" />
+                                <xsd:attribute name="name" type="xsd:string" use="required" />
+                            </xsd:extension>
+                        </xsd:simpleContent>
+                    </xsd:complexType>
+                </xsd:element>
+
+            </xsd:sequence>
+        </xsd:choice>
+        <xsd:attribute name="type">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="camera" />
+                    <xsd:enumeration value="Light" />
+                    <xsd:enumeration value="AudioListener" />
+                    <xsd:enumeration value="Script" />
+                    <xsd:enumeration value="Rigidbody" />
+                    <xsd:enumeration value="Collider" />
+                    <xsd:enumeration value="MeshRenderer" />
+                    <xsd:enumeration value="Canvas" />
+                    <xsd:enumeration value="CanvasScaler" />
+                    <xsd:enumeration value="AudioSource" />
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:simpleType name="parameter">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="int" />
+            <xsd:enumeration value="float" />
+            <xsd:enumeration value="double" />
+            <xsd:enumeration value="string" />
+            <xsd:enumeration value="GameObject" />
+            <xsd:enumeration value="Button" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="lightType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Directional" />
+            <xsd:enumeration value="Spot" />
+            <xsd:enumeration value="Point" />
+            <xsd:enumeration value="Area" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="collType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Box" />
+            <xsd:enumeration value="Mesh" />
+            <xsd:enumeration value="Capsule" />
+            <xsd:enumeration value="Sphere" />
+            <xsd:enumeration value="Terrain" />
+            <xsd:enumeration value="Wheel" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="renderType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="ScreenSpace" />
+            <xsd:enumeration value="WorldSpace" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="scaleType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Pixel" />
+            <xsd:enumeration value="Screen" />
+            <xsd:enumeration value="Physical" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="colorHexType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="#[0-9a-fA-F]{6}" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+</xsd:schema>

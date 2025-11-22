@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://ProjectScene.org"
+    xmlns="http://ProjectScene.org"
+    xmlns:comp="http://component.org"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="http://component.org"
+        schemaLocation="XML-MiniProject3-BaeJunyup-import2.xsd" />
+
+    <xsd:element name="transform">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="position" />
+                <xsd:element ref="rotation" />
+                <xsd:element ref="scale" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="position">
+        <xsd:complexType>
+            <xsd:attribute name="x" type="xsd:float" use="required" />
+            <xsd:attribute name="y" type="xsd:float" use="required" />
+            <xsd:attribute name="z" type="xsd:float" use="required" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="rotation">
+        <xsd:complexType>
+            <xsd:attribute name="x" type="xsd:float" use="required" />
+            <xsd:attribute name="y" type="xsd:float" use="required" />
+            <xsd:attribute name="z" type="xsd:float" use="required" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="scale">
+        <xsd:complexType>
+            <xsd:attribute name="x" type="xsd:float" use="required" />
+            <xsd:attribute name="y" type="xsd:float" use="required" />
+            <xsd:attribute name="z" type="xsd:float" use="required" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="components">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="comp:component" minOccurs="0" maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

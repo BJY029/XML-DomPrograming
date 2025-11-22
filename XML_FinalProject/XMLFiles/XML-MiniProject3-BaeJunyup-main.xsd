@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://Project.org"
+    xmlns="http://Project.org"
+    xmlns:pjs="http://ProjectScene.org"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="http://ProjectScene.org"
+        schemaLocation="XML-MiniProject3-BaeJunyup-import1.xsd" />
+    <xsd:element name="project">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="pjs:scene" maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
