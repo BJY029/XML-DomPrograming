@@ -13,6 +13,8 @@ public class DOMTreeBuilder {
 			if(child.getNodeType() == Node.TEXT_NODE && child.getNodeValue().trim().length() == 0)
 				continue;
 			
+			
+			
 			treeNode.add(buildTree(child));
 		}
 		return treeNode;

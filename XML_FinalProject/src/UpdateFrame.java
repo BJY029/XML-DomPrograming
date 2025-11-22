@@ -126,7 +126,6 @@ public class UpdateFrame {
 
 		});
 
-		String[] TypeList = { "ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT" };
 
 		JButton UpdateButton = new JButton("Update");
 		UpdateButton.setBounds(226, 678, 97, 23);

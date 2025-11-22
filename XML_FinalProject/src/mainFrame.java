@@ -98,7 +98,7 @@ public class MainFrame {
 		JButton menu8_btn = new JButton("8. Delete");
 		menu8_btn.setFont(new Font("굴림", Font.PLAIN, 18));
 		menu8_btn.setBounds(360, 570, 330, 40);
-		//menu8_btn.addActionListener(e -> DeleteAction());
+		menu8_btn.addActionListener(e -> DeleteAction());
 		frame.getContentPane().add(menu8_btn);
 		
 		JButton menu9_btn = new JButton("9. Exit");
@@ -158,6 +158,12 @@ public class MainFrame {
 	private void UpdateAction()
 	{
 		new UpdateFrame().setVisible(true);
+		frame.dispose();
+	}
+	
+	private void DeleteAction()
+	{
+		new DeleteFrame().setVisible(true);
 		frame.dispose();
 	}
 }
