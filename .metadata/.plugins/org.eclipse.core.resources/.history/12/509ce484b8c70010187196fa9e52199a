@@ -1,0 +1,256 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.JScrollPane;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+
+import javax.swing.JTree;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
+import javax.swing.JRadioButton;
+import javax.swing.JPanel;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
+
+public class UpdateFrame {
+
+	private JFrame frame;
+	private JTree tree;
+	private JButton ModifyButton;
+	private JTextField NodeNameField;
+	private JTextField NodeValueField;
+	private JTextField AttributeValueField;
+	private JTextField CommentField;
+	private JComboBox AttComboBox;
+	
+	private Node selectedNode;
+
+	public void setVisible(boolean b) {
+		frame.setVisible(b);
+	}
+
+	public void returnToMain() {
+		SwingUtilities.invokeLater(() -> {
+			JFrame toClose = this.frame; // 닫을 대상 보관
+			MainFrame main = new MainFrame();
+			main.setVisible(true); // 새 메인 띄우기
+			if (toClose != null)
+				toClose.dispose(); // 반드시 명시적으로 닫기
+		});
+	}
+	
+	public UpdateFrame() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 1120, 750);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+
+		if (!FileData.isLoaded()) {
+			JOptionPane.showMessageDialog(null, "No files have been loaded, please load the files first.", "ERROR",
+					JOptionPane.ERROR_MESSAGE);
+			returnToMain();
+			return;
+		}
+
+		JLabel InsertLabel = new JLabel("Update");
+		InsertLabel.setFont(new Font("굴림", Font.PLAIN, 24));
+		InsertLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		InsertLabel.setBounds(12, 10, 1080, 45);
+		frame.getContentPane().add(InsertLabel);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 65, 535, 611);
+		frame.getContentPane().add(scrollPane);
+
+		JLabel InsertionLabel = new JLabel("Select the node to update");
+		InsertionLabel.setFont(new Font("굴림", Font.PLAIN, 20));
+		InsertionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		scrollPane.setColumnHeaderView(InsertionLabel);
+
+		DefaultMutableTreeNode rootNode = DOMTreeBuilder.buildTree(FileData.document.getDocumentElement());
+		tree = new JTree(rootNode);
+		scrollPane.setViewportView(tree);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
+			public void valueChanged(TreeSelectionEvent e) {
+				InitAll();
+				TreePath path = tree.getSelectionPath();
+				if (path == null)
+					return;
+
+				DefaultMutableTreeNode selectedTreeNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+				Object userObject = selectedTreeNode.getUserObject();
+
+				if (userObject instanceof Node) {
+					//System.out.println("event activated");
+					Node getNode = (Node) userObject;
+
+					selectedNode = getNode;
+				}
+			}
+
+		});
+
+		String[] TypeList = { "ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT" };
+
+		JButton UpdateButton = new JButton("Update");
+		UpdateButton.setBounds(226, 678, 97, 23);
+		UpdateButton.addActionListener(e -> UpdateJTree());
+		frame.getContentPane().add(UpdateButton);
+
+		ModifyButton = new JButton("Modify");
+		ModifyButton.setEnabled(false);
+		ModifyButton.setFont(new Font("굴림", Font.PLAIN, 20));
+		//ModifyButton.addActionListener(e -> Insert());
+		ModifyButton.setBounds(758, 581, 127, 45);
+
+		frame.getContentPane().add(ModifyButton);
+		frame.setLocationRelativeTo(null);
+
+		JButton finBtn = new JButton("Back to main");
+		finBtn.setFont(new Font("굴림", Font.PLAIN, 18));
+		finBtn.setBounds(922, 676, 170, 25);
+		finBtn.addActionListener(e -> returnToMain());
+		frame.getContentPane().add(finBtn);
+		
+		JLabel NodeNameLabel = new JLabel("Node Name");
+		NodeNameLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		NodeNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		NodeNameLabel.setBounds(604, 108, 121, 30);
+		frame.getContentPane().add(NodeNameLabel);
+		
+		JLabel NodeValueLabel = new JLabel("Node Value");
+		NodeValueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		NodeValueLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		NodeValueLabel.setBounds(604, 202, 121, 30);
+		frame.getContentPane().add(NodeValueLabel);
+		
+		JLabel AttributeNameLabel = new JLabel("Attribute Name");
+		AttributeNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		AttributeNameLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		AttributeNameLabel.setBounds(604, 291, 121, 30);
+		frame.getContentPane().add(AttributeNameLabel);
+		
+		JLabel AttributeValueLabel = new JLabel("Attribute Value");
+		AttributeValueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		AttributeValueLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		AttributeValueLabel.setBounds(604, 387, 121, 30);
+		frame.getContentPane().add(AttributeValueLabel);
+		
+		JLabel CommentLabel = new JLabel("Comment");
+		CommentLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		CommentLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		CommentLabel.setBounds(604, 477, 121, 30);
+		frame.getContentPane().add(CommentLabel);
+		
+		NodeNameField = new JTextField();
+		NodeNameField.setBounds(737, 107, 243, 35);
+		frame.getContentPane().add(NodeNameField);
+		NodeNameField.setColumns(10);
+		
+		NodeValueField = new JTextField();
+		NodeValueField.setColumns(10);
+		NodeValueField.setBounds(737, 201, 243, 35);
+		frame.getContentPane().add(NodeValueField);
+		
+		AttributeValueField = new JTextField();
+		AttributeValueField.setColumns(10);
+		AttributeValueField.setBounds(737, 386, 243, 35);
+		frame.getContentPane().add(AttributeValueField);
+		
+		CommentField = new JTextField();
+		CommentField.setColumns(10);
+		CommentField.setBounds(737, 476, 243, 35);
+		frame.getContentPane().add(CommentField);
+		
+		AttComboBox = new JComboBox();
+		AttComboBox.setBounds(737, 287, 243, 40);
+		frame.getContentPane().add(AttComboBox);
+	}
+	
+	private void UpdateJTree() {
+		DefaultMutableTreeNode rootNode = DOMTreeBuilder.buildTree(FileData.document.getDocumentElement());
+		DefaultTreeModel model = new DefaultTreeModel(rootNode);
+		tree.setModel(model);
+	}
+	
+	private void InitAll() {
+		selectedNode = null;
+
+		AttComboBox.setSelectedIndex(0);
+		AttComboBox.setEnabled(false);
+		NodeNameField.setText("");
+		NodeNameField.setEnabled(false);
+		NodeValueField.setText("");
+		NodeValueField.setEnabled(false);
+		AttributeValueField.setText("");
+		AttributeValueField.setEnabled(false);
+		CommentField.setText("");
+		CommentField.setEnabled(false);
+		ModifyButton.setEnabled(false);
+	}
+	
+	private void activeAvailableField()
+	{
+		switch (selectedNode.getNodeType()) {
+		case Node.ELEMENT_NODE:
+			NodeNameField.setText(selectedNode.getNodeName());
+			NodeNameField.setEnabled(true);
+			NodeValueField.setText(selectedNode.getNodeValue());
+			
+			NamedNodeMap attrs = selectedNode.getAttributes();
+			for(int i = 0; i < attrs.getLength(); i++) {
+				Node attrNode = attrs.item(i);
+				String name = attrNode.getNodeName();
+				String value = attrNode.getNodeValue();
+				AttComboBox.addItem(name+ " = " + value);
+			}
+			
+			AttributeValueField.setEnabled(true);
+
+		case Node.ATTRIBUTE_NODE:
+			
+
+		case Node.TEXT_NODE:
+			
+
+		case Node.COMMENT_NODE:
+			
+
+		}
+	}
+}

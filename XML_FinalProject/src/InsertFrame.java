@@ -201,7 +201,7 @@ public class InsertFrame {
 		InsertRadioButton_back.setEnabled(false);
 		InsertRadioButton_back.setFont(new Font("굴림", Font.PLAIN, 18));
 		InsertRadioButton_back.setHorizontalAlignment(SwingConstants.CENTER);
-		InsertRadioButton_back.setBounds(168, 5, 188, 34);
+		InsertRadioButton_back.setBounds(169, 5, 188, 34);
 		InsertRadioButton_back.setActionCommand("BACK");
 		panel.add(InsertRadioButton_back);
 
@@ -226,7 +226,8 @@ public class InsertFrame {
 
 		ActionListener insertModeListener = e -> {
 			ButtonModel selectedModel = group.getSelection();
-			if (selectedModel == null) {
+			insertType = TypeComboBox.getSelectedItem().toString();
+			if (selectedModel == null && insertType != "ATTRIBUTE") {
 				JOptionPane.showMessageDialog(null, "please check again", "warining", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
@@ -234,7 +235,7 @@ public class InsertFrame {
 			InsertRadioButton_front.setEnabled(false);
 			InsertRadioButton_back.setEnabled(false);
 			TypeComboBox.setEnabled(false);
-			insertType = TypeComboBox.getSelectedItem().toString();
+			
 			String command = selectedModel.getActionCommand();
 			switch (command) {
 			case "FRONT":
@@ -252,6 +253,11 @@ public class InsertFrame {
 		SetModeButton.setBounds(107, 183, 243, 23);
 		SetModeButton.addActionListener(insertModeListener);
 		subPanel.add(SetModeButton);
+		
+		JLabel lblNewLabel = new JLabel("Ignored for attribute types.");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(48, 104, 347, 15);
+		subPanel.add(lblNewLabel);
 	}
 
 	private void UpdateJTree() {
