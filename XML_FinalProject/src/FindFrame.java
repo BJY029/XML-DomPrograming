@@ -8,9 +8,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
 import javax.swing.SwingUtilities;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -21,7 +27,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
-
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -45,7 +50,7 @@ public class FindFrame {
 	public FindFrame() {
 		initialize();
 	}
-	
+
 	public void setVisible(boolean b) {
 		frame.setVisible(b);
 	}
@@ -59,81 +64,88 @@ public class FindFrame {
 				toClose.dispose(); // 반드시 명시적으로 닫기
 		});
 	}
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1120, 750);
+		frame.setBounds(100, 100, 1120, 765);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
-		if(!FileData.isLoaded())
-		{
-			JOptionPane.showMessageDialog(null, "No files have been loaded, please load the files first.", "ERROR", JOptionPane.ERROR_MESSAGE);
+
+		if (!FileData.isLoaded()) {
+			JOptionPane.showMessageDialog(null, "No files have been loaded, please load the files first.", "ERROR",
+					JOptionPane.ERROR_MESSAGE);
 			returnToMain();
 			return;
 		}
-		
+
 		JLabel TypeLabel = new JLabel("Type");
 		TypeLabel.setFont(new Font("굴림", Font.PLAIN, 18));
 		TypeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		TypeLabel.setBounds(159, 10, 89, 33);
+		TypeLabel.setBounds(79, 34, 89, 33);
 		frame.getContentPane().add(TypeLabel);
 		frame.setLocationRelativeTo(null);
-		
-		JLabel NameLabel = new JLabel("Name");
+
+		JLabel NameLabel = new JLabel("(Element, Atribute)Name");
 		NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		NameLabel.setFont(new Font("굴림", Font.PLAIN, 18));
-		NameLabel.setBounds(482, 10, 89, 33);
+		NameLabel.setFont(new Font("굴림", Font.PLAIN, 14));
+		NameLabel.setBounds(409, 21, 180, 23);
 		frame.getContentPane().add(NameLabel);
-		
-		String[] TypeList = {"ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT"};
+
+		JLabel lbltextCommentname = new JLabel("(Text, Comment)Value");
+		lbltextCommentname.setHorizontalAlignment(SwingConstants.CENTER);
+		lbltextCommentname.setFont(new Font("굴림", Font.PLAIN, 14));
+		lbltextCommentname.setBounds(409, 44, 180, 23);
+		frame.getContentPane().add(lbltextCommentname);
+
+		String[] TypeList = { "ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT" };
 		JComboBox comboBox = new JComboBox(TypeList);
-		comboBox.setBounds(254, 15, 188, 23);
+		comboBox.setBounds(174, 39, 188, 23);
 		frame.getContentPane().add(comboBox);
-		
+
 		NameField = new JTextField();
 		NameField.setFont(new Font("Gulim", Font.PLAIN, 12));
-		NameField.setBounds(573, 17, 223, 21);
+		NameField.setBounds(584, 41, 223, 21);
 		frame.getContentPane().add(NameField);
 		NameField.setColumns(10);
-		
+
 		JButton SearchBtn = new JButton("Search");
-		SearchBtn.setBounds(819, 16, 97, 23);
-		SearchBtn.addActionListener(e -> Find(FileData.document.getDocumentElement(), comboBox.getSelectedItem().toString(), NameField.getText()));
+		SearchBtn.setBounds(819, 40, 97, 23);
+		SearchBtn.addActionListener(e -> Find(FileData.document.getDocumentElement(),
+				comboBox.getSelectedItem().toString(), NameField.getText()));
 		frame.getContentPane().add(SearchBtn);
-		
+
 		resultComboBox = new JComboBox();
-		resultComboBox.setBounds(409, 53, 287, 23);
+		resultComboBox.setBounds(409, 94, 287, 23);
 		frame.getContentPane().add(resultComboBox);
-		
+
 		DetailsBtn = new JButton("Details");
 		DetailsBtn.setEnabled(false);
 		DetailsBtn.addActionListener(e -> showDetails());
 		DetailsBtn.setFont(new Font("굴림", Font.PLAIN, 14));
-		DetailsBtn.setBounds(500, 86, 97, 23);
+		DetailsBtn.setBounds(500, 127, 97, 23);
 		frame.getContentPane().add(DetailsBtn);
-		
+
 		DetailTextPane = new JTextPane();
 		DetailTextPane.setFont(new Font("굴림", Font.PLAIN, 24));
 		DetailTextPane.setText("");
-		DetailTextPane.setBounds(12, 119, 1080, 548);
+		DetailTextPane.setBounds(12, 160, 1080, 521);
 		frame.getContentPane().add(DetailTextPane);
-		
+
 		JButton finBtn = new JButton("Back to main");
 		finBtn.setFont(new Font("굴림", Font.PLAIN, 18));
-		finBtn.setBounds(922, 676, 170, 25);
+		finBtn.setBounds(922, 691, 170, 25);
 		finBtn.addActionListener(e -> returnToMain());
 		frame.getContentPane().add(finBtn);
-		
+
 	}
-	
-	private void Find(Node node, String Type,  String Name)
-	{
+
+	private void Find(Node node, String Type, String Name) {
 		foundNodes.clear();
-		
-		switch(Type) {
+
+		switch (Type) {
 		case "ELEMENT":
 			FindElement(node, Name);
 			break;
@@ -147,22 +159,21 @@ public class FindFrame {
 			FindComment(node, Name);
 			break;
 		}
-		
+
 		UpdateResultComboBox();
 	}
-	
-	private void UpdateResultComboBox()
-	{
+
+	private void UpdateResultComboBox() {
 		resultComboBox.removeAllItems();
-		
-		if(foundNodes == null || foundNodes.isEmpty()) {
+
+		if (foundNodes == null || foundNodes.isEmpty()) {
 			resultComboBox.addItem("No Items");
 			resultComboBox.setSelectedIndex(0);
 			DetailsBtn.setEnabled(false);
 			return;
 		}
 		int idx = 0;
-		for(Node node : foundNodes) {
+		for (Node node : foundNodes) {
 			String name = node.getNodeName();
 			resultComboBox.addItem(name + idx);
 			idx++;
@@ -170,42 +181,89 @@ public class FindFrame {
 		resultComboBox.setSelectedIndex(0);
 		DetailsBtn.setEnabled(true);
 	}
-	
-	private void FindElement(Node node, String Name)
-	{
-		if(node == null) return;
-		
+
+	private void FindElement(Node node, String Name) {
+		if (node == null)
+			return;
+
 		NodeList children = node.getChildNodes();
-		for(int i = 0; i < children.getLength(); i++) {
+		for (int i = 0; i < children.getLength(); i++) {
 			Node child = children.item(i);
-			
-			if(child.getNodeName().equals(Name)) {
+
+			if (child.getNodeName().equals(Name)) {
 				foundNodes.add(child);
 			}
-			
+
 			FindElement(child, Name);
 		}
 	}
-	
+
 	private void FindAttribute(Node node, String Name) {
-		
+
+		if (node == null)
+			return;
+
+		if (node.getNodeType() == Node.ELEMENT_NODE) {
+			Element ele = (Element) node;
+			NamedNodeMap atts = ele.getAttributes();
+
+			for (int i = 0; i < atts.getLength(); i++) {
+				Node attribute = atts.item(i);
+				if (attribute.getNodeName().equals(Name)) {
+					foundNodes.add(attribute);
+				}
+			}
+		}
+
+		NodeList children = node.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			FindAttribute(children.item(i), Name);
+		}
 	}
 
 	private void FindText(Node node, String Name) {
-		
+		if (node == null)
+			return;
+
+		if (node.getNodeType() == Node.TEXT_NODE) {
+			Text txt = (Text) node;
+			String value = txt.getNodeValue();
+
+			if (value != null && value.contains(Name)) {
+				foundNodes.add(txt);
+			}
+		}
+
+		NodeList children = node.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			FindText(children.item(i), Name);
+		}
 	}
-	
+
 	private void FindComment(Node node, String Name) {
-		
+		if (node == null)
+			return;
+
+		if (node.getNodeType() == Node.COMMENT_NODE) {
+			Comment com = (Comment) node;
+			String value = com.getNodeValue();
+
+			if (value != null && value.contains(Name)) {
+				foundNodes.add(com);
+			}
+		}
+
+		NodeList children = node.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			FindComment(children.item(i), Name);
+		}
 	}
-	
-	private void showDetails()
-	{
+
+	private void showDetails() {
 		int nodeIdx = resultComboBox.getSelectedIndex();
 		Node node = foundNodes.get(nodeIdx);
-		
-		switch(getNodeTypeName(node))
-		{
+
+		switch (getNodeTypeName(node)) {
 		case "ELEMENT":
 			showElementDetails(node);
 			break;
@@ -221,58 +279,77 @@ public class FindFrame {
 		default:
 			return;
 		}
-		
+
 	}
-	
-	private void showElementDetails(Node node)
-	{		
+
+	private void showElementDetails(Node node) {
 		String nodeType = getNodeTypeName(node);
 		String nodeName = node.getNodeName();
 		String nodeValue = node.getNodeValue();
 		String parentNodeName = node.getParentNode().getNodeName();
 		String nodeDepth = getDepth(node) + "";
 		String siblingIdx = getSiblingIndex(node) + "";
-		
+
 		NodeList children = node.getChildNodes();
-		
+
 		int childrenlen = children.getLength();
 		String childrendCnt = children.getLength() + "";
 		String childrens = "";
-		for(int i = 0; i < childrenlen; i++) {
+		for (int i = 0; i < childrenlen; i++) {
 			String name = children.item(i).getNodeName();
 			childrens += " " + name + " ";
 		}
-		
-		String detail =
-			    "타입: " + nodeType + "\n" +
-			    "이름: " + nodeName + "\n" +
-			    "값: " + nodeValue + "\n" +
-			    "부모: " + parentNodeName + "\n" +
-			    "깊이: " + nodeDepth + "\n" +
-			    "형제 인덱스: " + siblingIdx + "\n" +
-			    "자식 노드들: " + childrens;
-		
+
+		String detail = "타입: " + nodeType + "\n" + "이름: " + nodeName + "\n" + "값: " + nodeValue + "\n" + "부모: "
+				+ parentNodeName + "\n" + "깊이: " + nodeDepth + "\n" + "형제 인덱스: " + siblingIdx + "\n" + "자식 노드들: "
+				+ childrens;
+
 		DetailTextPane.setText(detail);
-		//setCenterAlignment(DetailTextPane);
+		// setCenterAlignment(DetailTextPane);
 	}
-	
+
 	private void showAttributeDetails(Node node) {
-		
+		String nodeType = getNodeTypeName(node);
+		String nodeName = node.getNodeName();
+		String nodeValue = node.getNodeValue();
+
+		Attr att = (Attr) node;
+		String OwnerEle = att.getOwnerElement().getNodeName();
+		String nodeDepth = getDepth(att.getOwnerElement()) + "";
+
+		String detail = "타입: " + nodeType + "\n" + "이름: " + nodeName + "\n" + "값: " + nodeValue + "\n" + "부모: "
+				+ OwnerEle + "\n" + "깊이: " + nodeDepth + "\n";
+
+		DetailTextPane.setText(detail);
 	}
-	
+
 	private void showCommentDetails(Node node) {
-		
+		String nodeType = getNodeTypeName(node);
+		String nodeValue = node.getNodeValue().trim();
+		String length = nodeValue.length() + "";
+		String parentNodeName = node.getParentNode().getNodeName();
+
+		String detail = "타입: " + nodeType + "\n" + "내용: " + nodeValue + "\n" + "내용 길이: " + length + "\n" + "부모: "
+				+ parentNodeName + "\n";
+
+		DetailTextPane.setText(detail);
 	}
-	
+
 	private void showTextDetails(Node node) {
-		
+		String nodeType = getNodeTypeName(node);
+		String nodeValue = node.getNodeValue().trim();
+		String length = nodeValue.length() + "";
+		String parentNodeName = node.getParentNode().getNodeName();
+
+		String detail = "타입: " + nodeType + "\n" + "내용: " + nodeValue + "\n" + "내용 길이: " + length + "\n" + "부모: "
+				+ parentNodeName + "\n";
+
+		DetailTextPane.setText(detail);
 	}
-	
-	private String getNodeTypeName(Node node)
-	{
+
+	private String getNodeTypeName(Node node) {
 		int type = node.getNodeType();
-		switch(type)
-		{
+		switch (type) {
 		case Node.DOCUMENT_NODE:
 			return "DOCUMENT";
 		case Node.ENTITY_NODE:
@@ -292,25 +369,22 @@ public class FindFrame {
 		}
 		return "EXCEPTION";
 	}
-	
-	
-	
-	private int getDepth(Node node)
-	{
+
+	private int getDepth(Node node) {
 		int idx = 0;
-		while((node = node.getParentNode()) != null) idx++;
+		while ((node = node.getParentNode()) != null)
+			idx++;
 		return idx;
 	}
-	
-	private int getSiblingIndex(Node node)
-	{
+
+	private int getSiblingIndex(Node node) {
 		int idx = 1;
-		
-		while((node = node.getPreviousSibling()) != null)
-		{
-			if(node.getNodeType() != Node.TEXT_NODE && node.getNodeType() != Node.COMMENT_NODE) idx++;
+
+		while ((node = node.getPreviousSibling()) != null) {
+			if (node.getNodeType() != Node.TEXT_NODE && node.getNodeType() != Node.COMMENT_NODE)
+				idx++;
 		}
-		
+
 		return idx;
 	}
 }

@@ -28,6 +28,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -93,10 +94,10 @@ public class InsertFrame {
 		InsertLabel.setBounds(12, 10, 1080, 45);
 		frame.getContentPane().add(InsertLabel);
 
-		JLabel NameLabel = new JLabel("Node Name");
+		JLabel NameLabel = new JLabel("Node Name(id)");
 		NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		NameLabel.setFont(new Font("굴림", Font.PLAIN, 18));
-		NameLabel.setBounds(601, 387, 130, 23);
+		NameLabel.setBounds(587, 387, 144, 23);
 		frame.getContentPane().add(NameLabel);
 
 		JLabel ValueLabel = new JLabel("Node Value");
@@ -129,7 +130,7 @@ public class InsertFrame {
 				Object userObject = selectedTreeNode.getUserObject();
 
 				if (userObject instanceof Node) {
-					//System.out.println("event activated");
+					// System.out.println("event activated");
 					Node getNode = (Node) userObject;
 
 					setInsertInfo(getNode);
@@ -227,7 +228,7 @@ public class InsertFrame {
 		ActionListener insertModeListener = e -> {
 			ButtonModel selectedModel = group.getSelection();
 			insertType = TypeComboBox.getSelectedItem().toString();
-			if (selectedModel == null && insertType != "ATTRIBUTE") {
+			if (selectedModel == null && insertType != "ATTRIBUTE" && insertType != "TEXT") {
 				JOptionPane.showMessageDialog(null, "please check again", "warining", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
@@ -235,15 +236,17 @@ public class InsertFrame {
 			InsertRadioButton_front.setEnabled(false);
 			InsertRadioButton_back.setEnabled(false);
 			TypeComboBox.setEnabled(false);
-			
-			String command = selectedModel.getActionCommand();
-			switch (command) {
-			case "FRONT":
-				insertMode = "FRONT";
-				break;
-			case "BACK":
-				insertMode = "BACK";
-				break;
+
+			if (insertType == "ELEMENT" || insertType == "COMMENT") {
+				String command = selectedModel.getActionCommand();
+				switch (command) {
+				case "FRONT":
+					insertMode = "FRONT";
+					break;
+				case "BACK":
+					insertMode = "BACK";
+					break;
+				}
 			}
 			InsertSet();
 		};
@@ -253,8 +256,8 @@ public class InsertFrame {
 		SetModeButton.setBounds(107, 183, 243, 23);
 		SetModeButton.addActionListener(insertModeListener);
 		subPanel.add(SetModeButton);
-		
-		JLabel lblNewLabel = new JLabel("Ignored for attribute types.");
+
+		JLabel lblNewLabel = new JLabel("Ignored for attribute,text types.");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(48, 104, 347, 15);
 		subPanel.add(lblNewLabel);
@@ -296,10 +299,14 @@ public class InsertFrame {
 			NameTextField.setEnabled(true);
 			break;
 		case "ATTRIBUTE":
+			NameTextField.setEnabled(true);
+			ValueTextField.setEnabled(true);
 			break;
 		case "COMMENT":
+			ValueTextField.setEnabled(true);
 			break;
 		case "TEXT":
+			ValueTextField.setEnabled(true);
 			break;
 		}
 	}
@@ -311,51 +318,99 @@ public class InsertFrame {
 			InsertElement();
 			break;
 		case "ATTRIBUTE":
+			InsertAtt();
 			break;
 		case "COMMENT":
+			InsertComment();
 			break;
 		case "TEXT":
+			InsertText();
 			break;
 		}
 
 	}
 
 	private void InsertElement() {
-		Document doc = FileData.document;
 		Element ele = FileData.document.createElement(NameTextField.getText());
 		ele.appendChild(FileData.document.createTextNode(""));
 		Text text = FileData.document.createTextNode("\n");
-		
+
 		Node ParentNode = selectedNode.getParentNode();
-		if(ParentNode == null) {
+		if (ParentNode == null) {
 			JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
-		
-		if ("FRONT".equals(insertMode))
-		{
+
+		if ("FRONT".equals(insertMode)) {
 			ParentNode.insertBefore(ele, selectedNode);
 			ParentNode.insertBefore(text, selectedNode);
-			JOptionPane.showMessageDialog(null, "success to insert front");
-		}
-		else if ("BACK".equals(insertMode))
-		{
+			JOptionPane.showMessageDialog(null, "success to insert element front");
+		} else if ("BACK".equals(insertMode)) {
 			Node next = selectedNode.getNextSibling();
-			
-			if(next != null)
-			{
+
+			if (next != null) {
 				ParentNode.insertBefore(ele, next);
 				ParentNode.insertBefore(text, next);
-				JOptionPane.showMessageDialog(null, "success to insert back");
-			}
-			else
-			{
+				JOptionPane.showMessageDialog(null, "success to insert element back");
+			} else {
 				ParentNode.appendChild(ele);
 				ParentNode.appendChild(text);
 			}
 		}
+
+		InitAll();
+		UpdateJTree();
+	}
+
+	private void InsertAtt() {
+		Element ele = (Element) selectedNode;
+		ele.setAttribute(NameTextField.getText(), ValueTextField.getText());
+
+		InitAll();
+		UpdateJTree();
+		JOptionPane.showMessageDialog(null, "success to insert attribute");
+	}
+	
+	private void InsertComment()
+	{
+		Comment com = FileData.document.createComment(ValueTextField.getText());
+		Text text = FileData.document.createTextNode("\n");
+		
+		Node ParentNode = selectedNode.getParentNode();
+		if (ParentNode == null) {
+			JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		if ("FRONT".equals(insertMode)) {
+			ParentNode.insertBefore(com, selectedNode);
+			ParentNode.insertBefore(text, selectedNode);
+			JOptionPane.showMessageDialog(null, "success to insert comment front");
+		} else if ("BACK".equals(insertMode)) {
+			Node next = selectedNode.getNextSibling();
+
+			if (next != null) {
+				ParentNode.insertBefore(com, next);
+				ParentNode.insertBefore(text, next);
+				JOptionPane.showMessageDialog(null, "success to insert comment back");
+			} else {
+				ParentNode.appendChild(com);
+				ParentNode.appendChild(text);
+			}
+		}
+
+		InitAll();
+		UpdateJTree();
+	}
+	
+	private void InsertText()
+	{
+		Text textNode = FileData.document.createTextNode(ValueTextField.getText());
+		Element ele = (Element) selectedNode;
+		ele.appendChild(textNode);
 		
 		InitAll();
 		UpdateJTree();
+		JOptionPane.showMessageDialog(null, "success to insert Text");
 	}
 }

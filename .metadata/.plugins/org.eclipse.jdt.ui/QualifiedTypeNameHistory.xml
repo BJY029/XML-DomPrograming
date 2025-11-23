@@ -6,4 +6,5 @@
     <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
     <fullyQualifiedTypeName name="FileData"/>
     <fullyQualifiedTypeName name="javax.swing.tree.DefaultMutableTreeNode"/>
+    <fullyQualifiedTypeName name="org.w3c.dom.Node"/>
 </qualifiedTypeNameHistroy>

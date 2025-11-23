@@ -1,5 +1,6 @@
 import java.awt.Color;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import javax.swing.SwingUtilities;
@@ -14,8 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-
-
 import javax.swing.JFrame;
 
 public class PrintFrame {
@@ -28,7 +27,7 @@ public class PrintFrame {
 	public PrintFrame() {
 		initialize();
 	}
-	
+
 	public void setVisible(boolean b) {
 		frame.setVisible(b);
 	}
@@ -43,128 +42,129 @@ public class PrintFrame {
 		});
 	}
 
-	
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1120, 750);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
-		
-		if(!FileData.isLoaded())
-		{
-			JOptionPane.showMessageDialog(null, "No files have been loaded, please load the files first.", "ERROR", JOptionPane.ERROR_MESSAGE);
+
+		if (!FileData.isLoaded()) {
+			JOptionPane.showMessageDialog(null, "No files have been loaded, please load the files first.", "ERROR",
+					JOptionPane.ERROR_MESSAGE);
 			returnToMain();
 			return;
 		}
-		
+
 		JLabel TitleLabel = new JLabel("Print File");
 		TitleLabel.setFont(new Font("굴림", Font.PLAIN, 24));
 		TitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		TitleLabel.setBounds(12, 10, 1080, 32);
 		frame.getContentPane().add(TitleLabel);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 39, 1080, 627);
 		frame.getContentPane().add(scrollPane);
-		
+
 		textArea = new JTextArea();
 		textArea.setFont(new Font("Monospaced", Font.PLAIN, 18));
-		scrollPane.setViewportView(textArea);             // 긴 문자열 세팅
-		textArea.setEditable(false);            // 편집 불가 (읽기 전용)
-		
+		scrollPane.setViewportView(textArea); // 긴 문자열 세팅
+		textArea.setEditable(false); // 편집 불가 (읽기 전용)
 
 		indexArea = new JTextArea();
 		indexArea.setFont(new Font("Monospaced", Font.PLAIN, 18));
 		indexArea.setEditable(false);
 		indexArea.setBackground(Color.LIGHT_GRAY);
 		scrollPane.setRowHeaderView(indexArea);
-		
-		
+
 		JButton finBtn = new JButton("Back to main");
 		finBtn.setFont(new Font("굴림", Font.PLAIN, 18));
 		finBtn.setBounds(922, 676, 170, 25);
 		finBtn.addActionListener(e -> returnToMain());
 		frame.getContentPane().add(finBtn);
-		
+
 		JTreeBtn = new JButton("Print by JTree");
 		JTreeBtn.setFont(new Font("굴림", Font.PLAIN, 18));
 		JTreeBtn.setBounds(740, 676, 170, 25);
 		JTreeBtn.addActionListener(e -> showJTree());
 		frame.getContentPane().add(JTreeBtn);
-		
+
 		PrintAction();
 	}
-	
-	private void showJTree()
-	{
+
+	private void showJTree() {
 		new JTreePrintFrame().setVisible(true);
 	}
-	
-	private void PrintAction()
-	{
+
+	private void PrintAction() {
 		Document doc = FileData.document;
 		traverse(doc.getDocumentElement(), "  ", 1);
 	}
-	
-	
-	private int traverse(Node node, String indent, int index)
-	{
-		if(node == null) return index;
-		
+
+	private int traverse(Node node, String indent, int index) {
+		if (node == null)
+			return index;
+
 		int type = node.getNodeType();
 		String s;
-		switch(type)
-		{
+		switch (type) {
 		case Node.DOCUMENT_NODE:
 			s = indent + "[DOCUMENT]" + node.getNodeName() + "\n";
-			indexArea.append(String.valueOf(index)+"\n");
+			indexArea.append(String.valueOf(index) + "\n");
 			textArea.append(s);
 			break;
 		case Node.ENTITY_NODE:
 			s = indent + "[ENTITY]" + node.getNodeName() + "\n";
-			indexArea.append(String.valueOf(index)+"\n");
+			
+			indexArea.append(String.valueOf(index) + "\n");
 			textArea.append(s);
 			break;
 		case Node.ELEMENT_NODE:
 			s = indent + "[ELEMENT]" + node.getNodeName() + "\n";
-			indexArea.append(String.valueOf(index)+"\n");
+			if (node.hasAttributes()) {
+				NamedNodeMap attr = node.getAttributes();
+				for (int i = 0; i < attr.getLength(); i++) {
+					s += indent + "  " + "[Attribute] " + attr.item(i).getNodeName() + "=" + attr.item(i).getNodeValue() +"\n";
+					indexArea.append(String.valueOf(index) + "\n");
+					index += 1;
+				}
+			}
+			indexArea.append(String.valueOf(index) + "\n");
 			textArea.append(s);
 			break;
 		case Node.ENTITY_REFERENCE_NODE:
 			s = indent + "[ENTITY_REFERENCE]" + node.getNodeName() + "\n";
-			indexArea.append(String.valueOf(index)+"\n");
+			indexArea.append(String.valueOf(index) + "\n");
 			textArea.append(s);
 			break;
 		case Node.CDATA_SECTION_NODE:
-			s = indent + "[CDATA_SECTION]" + node.getNodeName() + " " + node.getNodeValue() +"\n";
-			indexArea.append(String.valueOf(index)+"\n");
+			s = indent + "[CDATA_SECTION]" + node.getNodeName() + " " + node.getNodeValue() + "\n";
+			indexArea.append(String.valueOf(index) + "\n");
 			textArea.append(s);
 			break;
 		case Node.COMMENT_NODE:
-			s = indent + "[COMMENT]" + node.getNodeName() + " " + node.getNodeValue()+ "\n";
-			indexArea.append(String.valueOf(index)+"\n");
+			s = indent + "[COMMENT]" + node.getNodeName() + " " + node.getNodeValue() + "\n";
+			indexArea.append(String.valueOf(index) + "\n");
 			textArea.append(s);
 			break;
 		case Node.TEXT_NODE:
-			s = indent + "[TEXT]" + node.getNodeName() + " " + node.getNodeValue()+ "\n";
-			indexArea.append(String.valueOf(index)+"\n");
-			indexArea.append(String.valueOf(index+1)+"\n");
-			index+=1;
+			s = indent + "[TEXT]" + node.getNodeName() + " " + node.getNodeValue() + "\n";
+			indexArea.append(String.valueOf(index) + "\n");
+			indexArea.append(String.valueOf(index + 1) + "\n");
+			index += 1;
 			textArea.append(s);
 			break;
 		}
-		
+
 		NodeList children = node.getChildNodes();
-		if(children != null)
-		{
+		if (children != null) {
 			int len = children.getLength();
-			for(int i = 0; i < len; i++) {
-				index = traverse(children.item(i), indent + "  ", index+1);
+			for (int i = 0; i < len; i++) {
+				index = traverse(children.item(i), indent + "  ", index + 1);
 			}
 		}
 		return index;
-			
+
 	}
 
 }

@@ -16,6 +16,7 @@
                 <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
+            <!--test-->
                 <comp:component type="camera">
                     <comp:FieldOfView>60</comp:FieldOfView>
                     <comp:NearClip>0.3</comp:NearClip>
