@@ -1,3 +1,5 @@
-2025/11/23-14:44:09.619 7ed4 Reusing MANIFEST C:\Users\junba\OneDrive\바탕 화면\학교\25학년 2학기\XML 프로그래밍\XML-FinalProject\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001
-2025/11/23-14:44:09.623 7ed4 Recovering log #3
-2025/11/23-14:44:09.624 7ed4 Reusing old log C:\Users\junba\OneDrive\바탕 화면\학교\25학년 2학기\XML 프로그래밍\XML-FinalProject\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000003.log 
+2025/11/23-18:56:30.362 1b00 Log #3: 8 ops saved to Table #4 OK
+2025/11/23-18:56:30.370 1b00 Archiving C:\Users\samsung\OneDrive\Desktop\세종대학교\3-2(25-2)\XML 프로그래밍\XML-FinalProject\XML-DomPrograming\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000003.log: OK
+2025/11/23-18:56:30.370 1b00 Table #4: 8 entries OK
+2025/11/23-18:56:30.373 1b00 Archiving C:\Users\samsung\OneDrive\Desktop\세종대학교\3-2(25-2)\XML 프로그래밍\XML-FinalProject\XML-DomPrograming\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001: OK
+2025/11/23-18:56:30.389 1b00 **** Repaired leveldb C:\Users\samsung\OneDrive\Desktop\세종대학교\3-2(25-2)\XML 프로그래밍\XML-FinalProject\XML-DomPrograming\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database; recovered 1 files; 265 bytes. Some data may have been lost. ****
