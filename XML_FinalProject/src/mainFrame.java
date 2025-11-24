@@ -74,7 +74,7 @@ public class MainFrame {
 		JButton menu4_btn = new JButton("4. Save");
 		menu4_btn.setFont(new Font("굴림", Font.PLAIN, 18));
 		menu4_btn.setBounds(360, 290, 330, 40);
-		//menu4_btn.addActionListener(e-> SaveAction());
+		menu4_btn.addActionListener(e-> SaveAction());
 		frame.getContentPane().add(menu4_btn);
 		
 		JButton menu5_btn = new JButton("5. Print");
@@ -104,7 +104,7 @@ public class MainFrame {
 		JButton menu9_btn = new JButton("9. Exit");
 		menu9_btn.setFont(new Font("굴림", Font.PLAIN, 18));
 		menu9_btn.setBounds(360, 640, 330, 40);
-		//menu9_btn.addActionListener(e -> BeforeExit());
+		menu9_btn.addActionListener(e -> ExitAction());
 		frame.getContentPane().add(menu9_btn);
 		
 		LoadInfoLabel = new JLabel("New label");
@@ -171,5 +171,24 @@ public class MainFrame {
 	{
 		new MakeFrame().setVisible(true);
 		frame.dispose();
+	}
+	
+	private void SaveAction()
+	{
+		SaveFile.saveFile();
+		isLoaded();
+	}
+	
+	private void ExitAction()
+	{
+		if(FileData.isLoaded()) {
+			int result = JOptionPane.showConfirmDialog(frame, "You have unsaved work. Would you like to save it?",
+					"Save?", JOptionPane.YES_NO_OPTION);
+			if (result == JOptionPane.YES_OPTION) {
+				SaveFile.saveFile();
+			}
+			System.exit(0);
+		}
+		System.exit(0);
 	}
 }

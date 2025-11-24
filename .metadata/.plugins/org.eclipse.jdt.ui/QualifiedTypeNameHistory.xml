@@ -3,10 +3,11 @@
     <fullyQualifiedTypeName name="java.io.IOException"/>
     <fullyQualifiedTypeName name="javax.xml.parsers.FactoryConfigurationError"/>
     <fullyQualifiedTypeName name="org.xml.sax.SAXException"/>
-    <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
     <fullyQualifiedTypeName name="FileData"/>
     <fullyQualifiedTypeName name="javax.swing.tree.DefaultMutableTreeNode"/>
     <fullyQualifiedTypeName name="org.w3c.dom.Node"/>
     <fullyQualifiedTypeName name="java.awt.event.ItemEvent"/>
     <fullyQualifiedTypeName name="org.w3c.dom.bootstrap.DOMImplementationRegistry"/>
+    <fullyQualifiedTypeName name="javax.lang.model.element.Element"/>
+    <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
 </qualifiedTypeNameHistroy>

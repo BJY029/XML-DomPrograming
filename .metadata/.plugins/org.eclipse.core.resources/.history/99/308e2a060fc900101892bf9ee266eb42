@@ -1,0 +1,507 @@
+import java.awt.EventQueue;
+import java.awt.Color;
+
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
+
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.StringWriter;
+
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+public class MakeFrame {
+
+	private JFrame frame;
+	private JTextField NameTextField;
+	private JTextField ValueTextField;
+	private JTree tree;
+	private JButton InsertButton;
+	private JRadioButton InsertRadioButton_front;
+	private JRadioButton InsertRadioButton_back;
+	private JComboBox TypeComboBox;
+	private ButtonGroup group;
+
+	private Node selectedNode;
+	private String insertMode;
+	private String insertType;
+
+	public void setVisible(boolean b) {
+		frame.setVisible(b);
+	}
+
+	public void returnToMain() {
+		SwingUtilities.invokeLater(() -> {
+			JFrame toClose = this.frame; // 닫을 대상 보관
+			MainFrame main = new MainFrame();
+			main.setVisible(true); // 새 메인 띄우기
+			if (toClose != null)
+				toClose.dispose(); // 반드시 명시적으로 닫기
+		});
+	}
+
+	public MakeFrame() {
+		initialize();
+
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 1120, 750);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+
+		if (!MakeRoot())
+			return;
+
+		JLabel MakeLabel = new JLabel("Make");
+		MakeLabel.setFont(new Font("굴림", Font.PLAIN, 24));
+		MakeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		MakeLabel.setBounds(12, 10, 1080, 45);
+		frame.getContentPane().add(MakeLabel);
+
+		JLabel NameLabel = new JLabel("Node Name(id)");
+		NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		NameLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		NameLabel.setBounds(587, 387, 144, 23);
+		frame.getContentPane().add(NameLabel);
+
+		JLabel ValueLabel = new JLabel("Node Value");
+		ValueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		ValueLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		ValueLabel.setBounds(602, 464, 130, 23);
+		frame.getContentPane().add(ValueLabel);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 65, 535, 611);
+		frame.getContentPane().add(scrollPane);
+
+		JLabel MakingLabel = new JLabel("Select the insertion location");
+		MakingLabel.setFont(new Font("굴림", Font.PLAIN, 20));
+		MakingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		scrollPane.setColumnHeaderView(MakingLabel);
+
+		DefaultMutableTreeNode rootNode = DOMTreeBuilder.buildTree(FileData.document.getDocumentElement());
+		tree = new JTree(rootNode);
+		scrollPane.setViewportView(tree);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
+			public void valueChanged(TreeSelectionEvent e) {
+				InitAll();
+				TreePath path = tree.getSelectionPath();
+				if (path == null)
+					return;
+
+				DefaultMutableTreeNode selectedTreeNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+				Object userObject = selectedTreeNode.getUserObject();
+
+				if (userObject instanceof Node) {
+					// System.out.println("event activated");
+					Node getNode = (Node) userObject;
+
+					setInsertInfo(getNode);
+				}
+			}
+
+		});
+
+		NameTextField = new JTextField();
+		NameTextField.setEnabled(false);
+		NameTextField.setBounds(737, 382, 267, 35);
+		frame.getContentPane().add(NameTextField);
+		NameTextField.setColumns(10);
+
+		ValueTextField = new JTextField();
+		ValueTextField.setEnabled(false);
+		ValueTextField.setBounds(626, 493, 378, 45);
+		frame.getContentPane().add(ValueTextField);
+		ValueTextField.setColumns(10);
+
+		JButton UpdateButton = new JButton("Update");
+		UpdateButton.setBounds(226, 678, 97, 23);
+		UpdateButton.addActionListener(e -> UpdateJTree());
+		frame.getContentPane().add(UpdateButton);
+
+		InsertButton = new JButton("Insert");
+		InsertButton.setEnabled(false);
+		InsertButton.setFont(new Font("굴림", Font.PLAIN, 20));
+		// InsertButton.addActionListener(e -> Insert());
+		InsertButton.setBounds(758, 581, 127, 45);
+
+		frame.getContentPane().add(InsertButton);
+		frame.setLocationRelativeTo(null);
+
+		JButton finBtn = new JButton("Back to main");
+		finBtn.setFont(new Font("굴림", Font.PLAIN, 18));
+		finBtn.setBounds(922, 676, 170, 25);
+		finBtn.addActionListener(e -> returnToMain());
+		frame.getContentPane().add(finBtn);
+
+		JPanel subPanel = new JPanel();
+		subPanel.setBackground(new Color(192, 192, 192));
+		subPanel.setBounds(601, 77, 434, 216);
+		frame.getContentPane().add(subPanel);
+		subPanel.setLayout(null);
+
+		JLabel ModeLabel = new JLabel("Insert Mode");
+		ModeLabel.setBounds(31, 10, 364, 25);
+		subPanel.add(ModeLabel);
+		ModeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		ModeLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+
+		JPanel panel = new JPanel();
+		panel.setBounds(38, 56, 364, 45);
+		subPanel.add(panel);
+		panel.setLayout(null);
+
+		InsertRadioButton_front = new JRadioButton("Insert Front");
+		InsertRadioButton_front.setEnabled(false);
+		InsertRadioButton_front.setFont(new Font("굴림", Font.PLAIN, 18));
+		InsertRadioButton_front.setHorizontalAlignment(SwingConstants.CENTER);
+		InsertRadioButton_front.setBounds(8, 5, 157, 34);
+		InsertRadioButton_front.setActionCommand("FRONT");
+		panel.add(InsertRadioButton_front);
+
+		InsertRadioButton_back = new JRadioButton("Insert Back");
+		InsertRadioButton_back.setEnabled(false);
+		InsertRadioButton_back.setFont(new Font("굴림", Font.PLAIN, 18));
+		InsertRadioButton_back.setHorizontalAlignment(SwingConstants.CENTER);
+		InsertRadioButton_back.setBounds(169, 5, 188, 34);
+		InsertRadioButton_back.setActionCommand("BACK");
+		panel.add(InsertRadioButton_back);
+
+		// InsertRadioButton_front.addActionListener(e -> InsertFront());
+		// InsertRadioButton_back.addActionListener(e -> InsertBack());
+
+		group = new ButtonGroup();
+		group.add(InsertRadioButton_back);
+		group.add(InsertRadioButton_front);
+		group.clearSelection();
+
+		JLabel TypeLabel = new JLabel("Type");
+		TypeLabel.setBounds(38, 128, 85, 23);
+		subPanel.add(TypeLabel);
+		TypeLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		TypeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+		String[] TypeList = { "ELEMENT", "CHILD ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT" };
+		TypeComboBox = new JComboBox(TypeList);
+		TypeComboBox.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				String selected = TypeComboBox.getSelectedItem().toString();
+				if (selected.equals("ATTRIBUTE") || selected.equals("TEXT")|| insertType == "CHILD ELEMENT") {
+					group.clearSelection();
+					InsertRadioButton_front.setEnabled(false);
+					InsertRadioButton_back.setEnabled(false);
+				} else {
+					InsertRadioButton_front.setEnabled(true);
+					InsertRadioButton_back.setEnabled(true);
+				}
+			}
+		});
+		TypeComboBox.setBounds(135, 129, 267, 23);
+
+		subPanel.add(TypeComboBox);
+		TypeComboBox.setEnabled(false);
+
+		ActionListener insertModeListener = e -> {
+			ButtonModel selectedModel = group.getSelection();
+			insertType = TypeComboBox.getSelectedItem().toString();
+			if (selectedModel == null && insertType != "ATTRIBUTE" && insertType != "TEXT") {
+				JOptionPane.showMessageDialog(null, "please check again", "warining", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			InsertRadioButton_front.setEnabled(false);
+			InsertRadioButton_back.setEnabled(false);
+			TypeComboBox.setEnabled(false);
+
+			if (insertType == "ELEMENT" || insertType == "COMMENT") {
+				String command = selectedModel.getActionCommand();
+				switch (command) {
+				case "FRONT":
+					insertMode = "FRONT";
+					break;
+				case "BACK":
+					insertMode = "BACK";
+					break;
+				}
+			}
+			// InsertSet();
+		};
+
+		JButton SetModeButton = new JButton("Set Insert Mode");
+		SetModeButton.setFont(new Font("굴림", Font.PLAIN, 18));
+		SetModeButton.setBounds(107, 183, 243, 23);
+		SetModeButton.addActionListener(insertModeListener);
+		subPanel.add(SetModeButton);
+
+		JLabel lblNewLabel = new JLabel("Ignored for attribute,text types.");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(48, 104, 347, 15);
+		subPanel.add(lblNewLabel);
+		UpdateJTree();
+	}
+
+	private boolean MakeRoot() {
+		if (FileData.document != null) {
+			int result = JOptionPane.showConfirmDialog(frame, "Would you like to save the file you are working on?",
+					"Save?", JOptionPane.YES_NO_OPTION);
+			if (result == JOptionPane.YES_OPTION) {
+				// do Save logic;
+			}
+		}
+
+		String newFileName = null;
+		newFileName = JOptionPane.showInputDialog("Enter a name for the new file you want to create.");
+		if (newFileName == null || newFileName.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Make Cancel");
+			returnToMain();
+			return false;
+		}
+
+		String rootName = null;
+		rootName = JOptionPane.showInputDialog("Enter Root Element name");
+		if (rootName == null || rootName.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Make Cancel");
+			returnToMain();
+			return false;
+		}
+
+		FileData.uri = newFileName;
+
+		createNewDocument();
+		Document doc = FileData.document;
+
+		Element rootEle = doc.createElement(rootName);
+		selectedNode = rootEle;
+		doc.appendChild(rootEle);
+
+		return true;
+	}
+
+	private void createNewDocument() {
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			FileData.document = builder.newDocument();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private void UpdateJTree() {
+		DefaultMutableTreeNode rootNode = DOMTreeBuilder.buildTree(FileData.document.getDocumentElement());
+		DefaultTreeModel model = new DefaultTreeModel(rootNode);
+		tree.setModel(model);
+	}
+
+	private void InitAll() {
+		selectedNode = null;
+		insertMode = "";
+		insertType = "";
+		group.clearSelection();
+		InsertRadioButton_front.setEnabled(false);
+		InsertRadioButton_back.setEnabled(false);
+		TypeComboBox.setSelectedIndex(0);
+		TypeComboBox.setEnabled(false);
+		NameTextField.setText("");
+		NameTextField.setEnabled(false);
+		ValueTextField.setText("");
+		ValueTextField.setEnabled(false);
+		InsertButton.setEnabled(false);
+	}
+
+	private void setInsertInfo(Node node) {
+		selectedNode = node;
+		InsertRadioButton_front.setEnabled(true);
+		InsertRadioButton_back.setEnabled(true);
+		TypeComboBox.setEnabled(true);
+	}
+	
+	//삽입할 노드 타입에 따라서 필드 값 활성화 혹은 비활성화
+	private void InsertSet() {
+		InsertButton.setEnabled(true);
+		switch (insertType) {
+		case "ELEMENT":
+			NameTextField.setEnabled(true);
+			break;
+		case "CHILD ELEMENT":
+			NameTextField.setEnabled(true);
+			break;
+		case "ATTRIBUTE":
+			NameTextField.setEnabled(true);
+			ValueTextField.setEnabled(true);
+			break;
+		case "COMMENT":
+			ValueTextField.setEnabled(true);
+			break;
+		case "TEXT":
+			ValueTextField.setEnabled(true);
+			break;
+		}
+	}
+
+	//삽입 모드 선택
+	private void Insert() {
+
+		switch (insertType) {
+		case "ELEMENT":
+			InsertElement();
+			break;
+		case "CHILD ELEMENT":
+			
+			break;
+		case "ATTRIBUTE":
+			InsertAtt();
+			break;
+		case "COMMENT":
+			InsertComment();
+			break;
+		case "TEXT":
+			InsertText();
+			break;
+		}
+
+	}
+
+	//element 삽입일 경우
+	private void InsertElement() {
+		//새로 생성할 요소 노드 생성
+		Element ele = FileData.document.createElement(NameTextField.getText());
+		//생성된 요소 노드에 Text 노드 생성
+		ele.appendChild(FileData.document.createTextNode(""));
+		//같이 삽입될 Text 노드 생성
+		Text text = FileData.document.createTextNode("\n");
+
+		//선택된 노드의 부모 노드를 가져온다.
+		Node ParentNode = selectedNode.getParentNode();
+		if (ParentNode == null) {
+			JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		//특정 element 앞 혹은 뒤에 삽입할 것인지에 따라 삽입 방법을 다르게 수행한다.
+		if ("FRONT".equals(insertMode)) {
+			ParentNode.insertBefore(ele, selectedNode);
+			ParentNode.insertBefore(text, selectedNode);
+			JOptionPane.showMessageDialog(null, "success to insert element front");
+		} else if ("BACK".equals(insertMode)) {
+			Node next = selectedNode.getNextSibling();
+
+			if (next != null) {
+				ParentNode.insertBefore(ele, next);
+				ParentNode.insertBefore(text, next);
+				JOptionPane.showMessageDialog(null, "success to insert element back");
+			} else {
+				ParentNode.appendChild(ele);
+				ParentNode.appendChild(text);
+			}
+		}
+
+		InitAll();
+		UpdateJTree();
+	}
+	
+	private void InsertElementChild()
+	{
+		
+	}
+
+	//속성 요소 삽입인 경우
+	private void InsertAtt() {
+		Element ele = (Element) selectedNode;
+		ele.setAttribute(NameTextField.getText(), ValueTextField.getText());
+
+		InitAll();
+		UpdateJTree();
+		JOptionPane.showMessageDialog(null, "success to insert attribute");
+	}
+	
+	//주석 요소 삽입인 경우
+	private void InsertComment()
+	{
+		Comment com = FileData.document.createComment(ValueTextField.getText());
+		Text text = FileData.document.createTextNode("\n");
+		
+		Node ParentNode = selectedNode.getParentNode();
+		if (ParentNode == null) {
+			JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		if ("FRONT".equals(insertMode)) {
+			ParentNode.insertBefore(com, selectedNode);
+			ParentNode.insertBefore(text, selectedNode);
+			JOptionPane.showMessageDialog(null, "success to insert comment front");
+		} else if ("BACK".equals(insertMode)) {
+			Node next = selectedNode.getNextSibling();
+
+			if (next != null) {
+				ParentNode.insertBefore(com, next);
+				ParentNode.insertBefore(text, next);
+				JOptionPane.showMessageDialog(null, "success to insert comment back");
+			} else {
+				ParentNode.appendChild(com);
+				ParentNode.appendChild(text);
+			}
+		}
+
+		InitAll();
+		UpdateJTree();
+	}
+	
+	//텍스트 노드 삽입인 경우
+	private void InsertText()
+	{
+		Text textNode = FileData.document.createTextNode(ValueTextField.getText());
+		Element ele = (Element) selectedNode;
+		ele.appendChild(textNode);
+		
+		InitAll();
+		UpdateJTree();
+		JOptionPane.showMessageDialog(null, "success to insert Text");
+	}
+}
