@@ -3,7 +3,10 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<section name="java.lang.Class">
 		<item key="replaceBarOpen" value="false"/>
+		<item key="selection" value="&#x09;private void MakeXMLDoc() {"/>
 		<list key="findhistory">
+			<item value="&#x09;private void MakeXMLDoc() {"/>
+			<item value="contentChanged"/>
 		</list>
 	</section>
 </section>

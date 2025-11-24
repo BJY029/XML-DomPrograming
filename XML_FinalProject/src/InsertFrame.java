@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 
 import javax.swing.JTree;
 import javax.swing.JComboBox;
@@ -37,6 +38,8 @@ import org.w3c.dom.Text;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class InsertFrame {
 
@@ -139,8 +142,7 @@ public class InsertFrame {
 
 		});
 
-		String[] TypeList = { "ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT" };
-
+		
 		NameTextField = new JTextField();
 		NameTextField.setEnabled(false);
 		NameTextField.setBounds(737, 382, 267, 35);
@@ -220,8 +222,28 @@ public class InsertFrame {
 		TypeLabel.setFont(new Font("굴림", Font.PLAIN, 18));
 		TypeLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
+		String[] TypeList = { "ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT" };
 		TypeComboBox = new JComboBox(TypeList);
+		TypeComboBox.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				String selected = TypeComboBox.getSelectedItem().toString();
+				if(selected.equals("ATTRIBUTE") || selected.equals("TEXT"))
+				{
+					group.clearSelection();
+					InsertRadioButton_front.setEnabled(false);
+					InsertRadioButton_back.setEnabled(false);
+				}
+				else
+				{
+					InsertRadioButton_front.setEnabled(true);
+					InsertRadioButton_back.setEnabled(true);
+				}
+			}
+		});
 		TypeComboBox.setBounds(135, 129, 267, 23);
+		
 		subPanel.add(TypeComboBox);
 		TypeComboBox.setEnabled(false);
 

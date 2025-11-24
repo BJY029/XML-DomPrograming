@@ -62,7 +62,7 @@ public class MainFrame {
 		JButton menu2_btn = new JButton("2. Make");
 		menu2_btn.setFont(new Font("굴림", Font.PLAIN, 18));
 		menu2_btn.setBounds(360, 150, 330, 40);
-		//menu2_btn.addActionListener(e-> MakeAction());
+		menu2_btn.addActionListener(e-> MakeAction());
 		frame.getContentPane().add(menu2_btn);
 		
 		JButton menu3_btn = new JButton("3. Find");
@@ -164,6 +164,12 @@ public class MainFrame {
 	private void DeleteAction()
 	{
 		new DeleteFrame().setVisible(true);
+		frame.dispose();
+	}
+	
+	private void MakeAction()
+	{
+		new MakeFrame().setVisible(true);
 		frame.dispose();
 	}
 }
