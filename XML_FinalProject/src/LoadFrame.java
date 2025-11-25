@@ -46,6 +46,14 @@ public class LoadFrame {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
+		
+		if (FileData.document != null) {
+			int result = JOptionPane.showConfirmDialog(frame, "Would you like to save the file you are working on?",
+					"Save?", JOptionPane.YES_NO_OPTION);
+			if (result == JOptionPane.YES_OPTION) {
+				SaveFile.saveFile();
+			}
+		}
 
 		JLabel TitleLabel = new JLabel("Load");
 		TitleLabel.setFont(new Font("굴림", Font.PLAIN, 24));
@@ -72,6 +80,9 @@ public class LoadFrame {
 
 	private void loadAction() {
 		try {
+			FileData.document = null;
+			FileData.uri = null;
+			
 			String uri = "XMLFiles/";
 			uri += comboBox.getSelectedItem().toString().trim();
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -84,13 +95,18 @@ public class LoadFrame {
 			
 			returnToMain();
 		} catch (FactoryConfigurationError e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace(System.err);
 		} catch (ParserConfigurationException e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace(System.err);
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
 		} catch (SAXException e) {
 			e.printStackTrace(System.err);
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
 			e.printStackTrace(System.err);
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

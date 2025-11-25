@@ -177,7 +177,7 @@ public class MakeFrame {
 		JButton finBtn = new JButton("Cancel and Exit");
 		finBtn.setFont(new Font("굴림", Font.PLAIN, 18));
 		finBtn.setBounds(872, 676, 220, 25);
-		finBtn.addActionListener(e ->  CancelProcess());
+		finBtn.addActionListener(e -> CancelProcess());
 		frame.getContentPane().add(finBtn);
 
 		JPanel subPanel = new JPanel();
@@ -233,7 +233,7 @@ public class MakeFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				String selected = TypeComboBox.getSelectedItem().toString();
-				if (selected.equals("ATTRIBUTE") || selected.equals("TEXT")|| selected.equals("CHILD ELEMENT")) {
+				if (selected.equals("ATTRIBUTE") || selected.equals("TEXT") || selected.equals("CHILD ELEMENT")) {
 					group.clearSelection();
 					InsertRadioButton_front.setEnabled(false);
 					InsertRadioButton_back.setEnabled(false);
@@ -251,14 +251,16 @@ public class MakeFrame {
 		ActionListener insertModeListener = e -> {
 			ButtonModel selectedModel = group.getSelection();
 			insertType = TypeComboBox.getSelectedItem().toString();
-			
-			if(selectedNode == FileData.document.getDocumentElement()) {
-				if(!insertType.equals("ATTRIBUTE") && !insertType.equals("CHILD ELEMENT")) {
-					JOptionPane.showMessageDialog(null, "The following insertion is not possible from the root node.", null, JOptionPane.WARNING_MESSAGE);
+
+			if (selectedNode == FileData.document.getDocumentElement()) {
+				if (!insertType.equals("ATTRIBUTE") && !insertType.equals("CHILD ELEMENT")) {
+					JOptionPane.showMessageDialog(null, "The following insertion is not possible from the root node.",
+							null, JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 			}
-			if (selectedModel == null && !insertType.equals("ATTRIBUTE") && !insertType.equals("TEXT")&& !insertType.equals("CHILD ELEMENT")) {
+			if (selectedModel == null && !insertType.equals("ATTRIBUTE") && !insertType.equals("TEXT")
+					&& !insertType.equals("CHILD ELEMENT")) {
 				JOptionPane.showMessageDialog(null, "please check again", "warining", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
@@ -291,50 +293,60 @@ public class MakeFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(48, 104, 347, 15);
 		subPanel.add(lblNewLabel);
-		
+
 		JButton SaveBtn = new JButton("Make and Exit");
 		SaveBtn.setFont(new Font("굴림", Font.PLAIN, 20));
 		SaveBtn.setBounds(872, 619, 220, 45);
-		SaveBtn.addActionListener(e->SaveDocument());
+		SaveBtn.addActionListener(e -> SaveDocument());
 		frame.getContentPane().add(SaveBtn);
 		UpdateJTree();
 	}
 
 	private boolean MakeRoot() {
-		if (FileData.document != null) {
-			int result = JOptionPane.showConfirmDialog(frame, "Would you like to save the file you are working on?",
-					"Save?", JOptionPane.YES_NO_OPTION);
-			if (result == JOptionPane.YES_OPTION) {
-				SaveFile.saveFile();
+		try {
+			if (FileData.document != null) {
+				int result = JOptionPane.showConfirmDialog(frame, "Would you like to save the file you are working on?",
+						"Save?", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION) {
+					SaveFile.saveFile();
+				}
 			}
-		}
 
-		String newFileName = null;
-		newFileName = JOptionPane.showInputDialog("Enter a name for the new file you want to create.(File name only, omitting extension)");
-		if (newFileName == null || newFileName.trim().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Make Cancel");
+			String newFileName = null;
+			newFileName = JOptionPane.showInputDialog(
+					"Enter a name for the new file you want to create.(File name only, omitting extension)");
+			if (newFileName == null || newFileName.trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Make Cancel");
+				returnToMain();
+				return false;
+			}
+
+			String rootName = null;
+			rootName = JOptionPane.showInputDialog("Enter Root Element name");
+			if (rootName == null || rootName.trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Make Cancel");
+				returnToMain();
+				return false;
+			}
+
+			FileData.uri = newFileName + ".xml";
+
+			createNewDocument();
+			Document doc = FileData.document;
+
+			Element rootEle = doc.createElement(rootName);
+			selectedNode = rootEle;
+			doc.appendChild(rootEle);
+
+			return true;
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			ex.printStackTrace();
+			FileData.document = null;
+			FileData.uri = null;
 			returnToMain();
 			return false;
 		}
-
-		String rootName = null;
-		rootName = JOptionPane.showInputDialog("Enter Root Element name");
-		if (rootName == null || rootName.trim().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Make Cancel");
-			returnToMain();
-			return false;
-		}
-
-		FileData.uri = newFileName + ".xml";
-
-		createNewDocument();
-		Document doc = FileData.document;
-
-		Element rootEle = doc.createElement(rootName);
-		selectedNode = rootEle;
-		doc.appendChild(rootEle);
-
-		return true;
 	}
 
 	private void createNewDocument() {
@@ -343,6 +355,7 @@ public class MakeFrame {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			FileData.document = builder.newDocument();
 		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
 		}
 	}
@@ -375,8 +388,8 @@ public class MakeFrame {
 		InsertRadioButton_back.setEnabled(true);
 		TypeComboBox.setEnabled(true);
 	}
-	
-	//삽입할 노드 타입에 따라서 필드 값 활성화 혹은 비활성화
+
+	// 삽입할 노드 타입에 따라서 필드 값 활성화 혹은 비활성화
 	private void InsertSet() {
 		InsertButton.setEnabled(true);
 		switch (insertType) {
@@ -399,7 +412,7 @@ public class MakeFrame {
 		}
 	}
 
-	//삽입 모드 선택
+	// 삽입 모드 선택
 	private void Insert() {
 
 		switch (insertType) {
@@ -422,23 +435,23 @@ public class MakeFrame {
 
 	}
 
-	//element 삽입일 경우
+	// element 삽입일 경우
 	private void InsertElement() {
-		//새로 생성할 요소 노드 생성
+		// 새로 생성할 요소 노드 생성
 		Element ele = FileData.document.createElement(NameTextField.getText());
-		//생성된 요소 노드에 Text 노드 생성
+		// 생성된 요소 노드에 Text 노드 생성
 		ele.appendChild(FileData.document.createTextNode(""));
-		//같이 삽입될 Text 노드 생성
+		// 같이 삽입될 Text 노드 생성
 		Text text = FileData.document.createTextNode("\n");
 
-		//선택된 노드의 부모 노드를 가져온다.
+		// 선택된 노드의 부모 노드를 가져온다.
 		Node ParentNode = selectedNode.getParentNode();
 		if (ParentNode == null) {
 			JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
-		//특정 element 앞 혹은 뒤에 삽입할 것인지에 따라 삽입 방법을 다르게 수행한다.
+		// 특정 element 앞 혹은 뒤에 삽입할 것인지에 따라 삽입 방법을 다르게 수행한다.
 		if ("FRONT".equals(insertMode)) {
 			ParentNode.insertBefore(ele, selectedNode);
 			ParentNode.insertBefore(text, selectedNode);
@@ -459,19 +472,18 @@ public class MakeFrame {
 		InitAll();
 		UpdateJTree();
 	}
-	
-	private void InsertElementChild(){
+
+	private void InsertElementChild() {
 		Element ele = FileData.document.createElement(NameTextField.getText());
-		Element selectedEle = (Element)selectedNode;
+		Element selectedEle = (Element) selectedNode;
 		selectedEle.appendChild(ele);
-		
+
 		InitAll();
 		UpdateJTree();
 		JOptionPane.showMessageDialog(null, "success to insert ChildElement");
 	}
 
-
-	//속성 요소 삽입인 경우
+	// 속성 요소 삽입인 경우
 	private void InsertAtt() {
 		Element ele = (Element) selectedNode;
 		ele.setAttribute(NameTextField.getText(), ValueTextField.getText());
@@ -480,13 +492,12 @@ public class MakeFrame {
 		UpdateJTree();
 		JOptionPane.showMessageDialog(null, "success to insert attribute");
 	}
-	
-	//주석 요소 삽입인 경우
-	private void InsertComment()
-	{
+
+	// 주석 요소 삽입인 경우
+	private void InsertComment() {
 		Comment com = FileData.document.createComment(ValueTextField.getText());
 		Text text = FileData.document.createTextNode("\n");
-		
+
 		Node ParentNode = selectedNode.getParentNode();
 		if (ParentNode == null) {
 			JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
@@ -513,57 +524,53 @@ public class MakeFrame {
 		InitAll();
 		UpdateJTree();
 	}
-	
-	//텍스트 노드 삽입인 경우
-	private void InsertText()
-	{
+
+	// 텍스트 노드 삽입인 경우
+	private void InsertText() {
 		Text textNode = FileData.document.createTextNode(ValueTextField.getText());
 		Element ele = (Element) selectedNode;
 		ele.appendChild(textNode);
-		
+
 		InitAll();
 		UpdateJTree();
 		JOptionPane.showMessageDialog(null, "success to insert Text");
 	}
-	
-	private void CancelProcess()
-	{
+
+	private void CancelProcess() {
 		int result = JOptionPane.showConfirmDialog(frame, "All your work will be lost. Would you like to save it?",
 				"Save?", JOptionPane.YES_NO_OPTION);
 		if (result == JOptionPane.YES_OPTION) {
 			SaveDocument();
-		}
-		else {
+		} else {
 			FileData.uri = null;
 			FileData.document = null;
 			returnToMain();
 		}
 	}
-	
-	private void SaveDocument()
-	{
+
+	private void SaveDocument() {
 		String rootPath = "XMLFiles/" + FileData.uri;
 		Document doc = FileData.document;
-		
+
 		try {
 			DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
 			DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-			
+
 			LSSerializer serializer = impl.createLSSerializer();
 			LSOutput output = impl.createLSOutput();
-			
+
 			FileOutputStream fos = new FileOutputStream(rootPath);
 			output.setByteStream(fos);
-			
+
 			serializer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
 			serializer.write(doc, output);
-			
+
 			fos.close();
-			
+
 			JOptionPane.showMessageDialog(null, "success to make new xml file\nfilename = \"" + FileData.uri + "\"");
 			returnToMain();
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
