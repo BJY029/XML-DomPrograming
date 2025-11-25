@@ -248,7 +248,8 @@ public class UpdateFrame {
 				AttComboBox.addItem(name+ " = " + value);
 			}
 			AttComboBox.setEnabled(true);
-			AttributeValueField.setEnabled(true);
+			if(attrs.getLength() == 0) AttributeValueField.setEnabled(false);
+			else AttributeValueField.setEnabled(true);
 			
 			break;
 		case Node.TEXT_NODE:
