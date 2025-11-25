@@ -1,31 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?><pj:project xmlns:comp="http://component.org" xmlns:pj="http://Project.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://Project.org XML-MiniProject3-BaeJunyup-main.xsd                         http://ProjectScene.org XML-MiniProject3-BaeJunyup-import1.xsd                         http://component.org XML-MiniProject3-BaeJunyup-import2.xsd                         ">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<pj:project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:pj="http://Project.org"
+    xmlns="http://ProjectScene.org"
+    xmlns:comp="http://component.org"
+    xsi:schemaLocation="http://Project.org XML-MiniProject3-BaeJunyup-main.xsd
+                        http://ProjectScene.org XML-MiniProject3-BaeJunyup-import1.xsd
+                        http://component.org XML-MiniProject3-BaeJunyup-import2.xsd
+                        ">
     <scene name="GameScene1">
         <object id="obj_GameScene1_01" name="MainCamera">
             <transform>
-                <position x="0.00" y="1.00" z="-10.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="1.00" z="-10.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
-                <!--test-->
                 <comp:component type="camera">
                     <comp:FieldOfView>60</comp:FieldOfView>
                     <comp:NearClip>0.3</comp:NearClip>
                     <comp:FarClip>1000</comp:FarClip>
                 </comp:component>
-                <comp:component type="AudioListener"/>
+                <comp:component type="AudioListener" />
                 <comp:component type="Script">
                     <comp:name>CameraController.cs</comp:name>
-                    <comp:parameter name="y_rotValue" type="float">-10</comp:parameter>
-                    <comp:parameter name="lerp_duration" type="float">2.0</comp:parameter>
+                    <comp:parameter type="float" name="y_rotValue">-10</comp:parameter>
+                    <comp:parameter
+                        type="float" name="lerp_duration">2.0</comp:parameter>
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_GameScene1_02" name="Directional Light">
             <transform>
-                <position x="0.00" y="0.00" z="0.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="Light">
@@ -35,11 +45,12 @@
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_GameScene1_03" name="Sites">
             <transform>
-                <position x="0.00" y="0.00" z="0.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="Script">
@@ -49,17 +60,19 @@
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_GameScene1_04" name="SiteA" parent="obj_GameScene1_03">
             <transform>
-                <position x="0.00" y="0.00" z="0.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="Script">
                     <comp:name>CapturePoint.cs</comp:name>
-                    <comp:parameter name="PointName" type="string">A</comp:parameter>
-                    <comp:parameter name="CaptureTime" type="float">30</comp:parameter>
+                    <comp:parameter type="string" name="PointName">A</comp:parameter>
+                    <comp:parameter
+                        type="float" name="CaptureTime">30</comp:parameter>
                 </comp:component>
                 <comp:component type="Rigidbody">
                     <comp:mass>1</comp:mass>
@@ -67,11 +80,12 @@
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_GameScene1_05" name="SiteA_0" parent="obj_GameScene1_04">
             <transform>
-                <position x="50.49" y="-3.46" z="71.53"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="24.86" y="1.00" z="26.91"/>
+                <position x="50.49" y="-3.46" z="71.53" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="24.86" y="1.00" z="26.91" />
             </transform>
             <components>
                 <comp:component type="Collider">
@@ -81,24 +95,28 @@
             </components>
         </object>
     </scene>
+
     <scene name="GameScene2">
         <object id="obj_GameScene2_01" name="Player">
             <transform>
-                <position x="1.00" y="0.00" z="0.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="1.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="Script">
                     <comp:name>PlayerController.cs</comp:name>
-                    <comp:parameter name="MoveSpeed" type="float">2</comp:parameter>
-                    <comp:parameter name="SprintSpeed" type="float">8</comp:parameter>
-                    <comp:parameter name="StaminaMaxValue" type="float">100</comp:parameter>
+                    <comp:parameter type="float" name="MoveSpeed">2</comp:parameter>
+                    <comp:parameter
+                        type="float" name="SprintSpeed">8</comp:parameter>
+                    <comp:parameter type="float"
+                        name="StaminaMaxValue">100</comp:parameter>
                 </comp:component>
                 <comp:component type="Script">
                     <comp:name>PlayerManager.cs</comp:name>
-                    <comp:parameter name="SkillTimer" type="float">7</comp:parameter>
-                    <comp:parameter name="HeartsValue" type="float">100</comp:parameter>
+                    <comp:parameter type="float" name="SkillTimer">7</comp:parameter>
+                    <comp:parameter
+                        type="float" name="HeartsValue">100</comp:parameter>
                 </comp:component>
                 <comp:component type="Rigidbody">
                     <comp:mass>50</comp:mass>
@@ -110,31 +128,36 @@
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_GameScene2_02" name="Enemy">
             <transform>
-                <position x="10.00" y="0.00" z="10.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="10.00" y="0.00" z="10.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="Script">
                     <comp:name>EnemyController.cs</comp:name>
-                    <comp:parameter name="MoveSpeed" type="float">3</comp:parameter>
-                    <comp:parameter name="SprintSpeed" type="float">10</comp:parameter>
-                    <comp:parameter name="StaminaMaxValue" type="float">120</comp:parameter>
+                    <comp:parameter type="float" name="MoveSpeed">3</comp:parameter>
+                    <comp:parameter
+                        type="float" name="SprintSpeed">10</comp:parameter>
+                    <comp:parameter type="float"
+                        name="StaminaMaxValue">120</comp:parameter>
                 </comp:component>
                 <comp:component type="Script">
                     <comp:name>EnemyManager.cs</comp:name>
-                    <comp:parameter name="SkillTimer" type="float">15</comp:parameter>
-                    <comp:parameter name="HeartsValue" type="float">150</comp:parameter>
+                    <comp:parameter type="float" name="SkillTimer">15</comp:parameter>
+                    <comp:parameter
+                        type="float" name="HeartsValue">150</comp:parameter>
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_GameScene2_03" name="PlayerCamera" parent="obj_GameScene2_01">
             <transform>
-                <position x="0.00" y="1.00" z="-10.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="1.00" z="-10.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="camera">
@@ -142,18 +165,19 @@
                     <comp:NearClip>0.3</comp:NearClip>
                     <comp:FarClip>1000</comp:FarClip>
                 </comp:component>
-                <comp:component type="AudioListener"/>
+                <comp:component type="AudioListener" />
                 <comp:component type="Script">
                     <comp:name>PlayerCamera.cs</comp:name>
-                    <comp:parameter name="distance" type="float">10.0</comp:parameter>
+                    <comp:parameter type="float" name="distance">10.0</comp:parameter>
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_GameScene2_04" name="OakTree">
             <transform>
-                <position x="0.00" y="0.00" z="5.00"/>
-                <rotation x="0.00" y="90.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="0.00" z="5.00" />
+                <rotation x="0.00" y="90.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="MeshRenderer">
@@ -165,11 +189,12 @@
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_GameScene2_05" name="Potion_Item">
             <transform>
-                <position x="-7.00" y="0.50" z="7.00"/>
-                <rotation x="45.00" y="0.00" z="45.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="-7.00" y="0.50" z="7.00" />
+                <rotation x="45.00" y="0.00" z="45.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="MeshRenderer">
@@ -181,16 +206,18 @@
                 </comp:component>
                 <comp:component type="Script">
                     <comp:name>Potion.cs</comp:name>
-                    <comp:parameter name="ChargeValue" type="float">30</comp:parameter>
-                    <comp:parameter name="ResponeTime" type="float">15</comp:parameter>
+                    <comp:parameter type="float" name="ChargeValue">30</comp:parameter>
+                    <comp:parameter
+                        type="float" name="ResponeTime">15</comp:parameter>
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_GameScene2_06" name="Boost_Item">
             <transform>
-                <position x="10.00" y="0.50" z="7.00"/>
-                <rotation x="45.00" y="0.00" z="45.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="10.00" y="0.50" z="7.00" />
+                <rotation x="45.00" y="0.00" z="45.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="MeshRenderer">
@@ -202,42 +229,46 @@
                 </comp:component>
                 <comp:component type="Script">
                     <comp:name>Boost.cs</comp:name>
-                    <comp:parameter name="BoostRate" type="float">1.2</comp:parameter>
-                    <comp:parameter name="ResponseTime" type="float">25</comp:parameter>
+                    <comp:parameter type="float" name="BoostRate">1.2</comp:parameter>
+                    <comp:parameter
+                        type="float" name="ResponseTime">25</comp:parameter>
                 </comp:component>
             </components>
         </object>
     </scene>
+
     <scene name="LobbyScene">
         <object id="obj_LobbyScene_01" name="Managers">
             <transform>
-                <position x="0.00" y="0.00" z="0.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <!--no
         component(Empty Object)-->
-            <components/>
+            <components />
         </object>
+
         <object id="obj_LobbyScene_02" name="ButtonManager" parent="obj_LobbyScene_01">
             <transform>
-                <position x="0.00" y="0.00" z="0.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="Script">
                     <comp:name>ButtonController.cs</comp:name>
-                    <comp:parameter name="LoadingPanel" type="GameObject"> LoadingObject</comp:parameter>
-                    <comp:parameter name="StopButton" type="Button"> StopBtnObjcet</comp:parameter>
+                    <comp:parameter type="GameObject" name="LoadingPanel"> LoadingObject</comp:parameter>
+                    <comp:parameter type="Button" name="StopButton"> StopBtnObjcet</comp:parameter>
                 </comp:component>
             </components>
         </object>
+
         <object id="obj_LobbyScene_03" name="BGMManager" parent="obj_LobbyScene_01">
             <transform>
-                <position x="0.00" y="0.00" z="0.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="AudioSource">
@@ -245,17 +276,20 @@
                     <comp:loop>true</comp:loop>
                     <comp:playOnAwake>true</comp:playOnAwake>
                 </comp:component>
-                <comp:component type="Script">
+                <comp:component
+                    type="Script">
                     <comp:name>AudioManager.cs</comp:name>
-                    <comp:parameter name="BgmVolume" type="float">0.7</comp:parameter>
+                    <comp:parameter type="float" name="BgmVolume">0.7</comp:parameter>
                 </comp:component>
             </components>
         </object>
+
+
         <object id="obj_LobbyScene_04" name="MainCanvas">
             <transform>
-                <position x="0.00" y="0.00" z="0.00"/>
-                <rotation x="0.00" y="0.00" z="0.00"/>
-                <scale x="1.00" y="1.00" z="1.00"/>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
             </transform>
             <components>
                 <comp:component type="Canvas">
