@@ -142,7 +142,6 @@ public class InsertFrame {
 
 		});
 
-		
 		NameTextField = new JTextField();
 		NameTextField.setEnabled(false);
 		NameTextField.setBounds(737, 382, 267, 35);
@@ -226,38 +225,35 @@ public class InsertFrame {
 		TypeComboBox = new JComboBox(TypeList);
 		TypeComboBox.addItemListener(new ItemListener() {
 			@Override
-			public void itemStateChanged(ItemEvent e)
-			{
+			public void itemStateChanged(ItemEvent e) {
 				String selected = TypeComboBox.getSelectedItem().toString();
-				if(selected.equals("ATTRIBUTE") || selected.equals("TEXT") )
-				{
+				if (selected.equals("ATTRIBUTE") || selected.equals("TEXT")) {
 					group.clearSelection();
 					InsertRadioButton_front.setEnabled(false);
 					InsertRadioButton_back.setEnabled(false);
-				}
-				else
-				{
+				} else {
 					InsertRadioButton_front.setEnabled(true);
 					InsertRadioButton_back.setEnabled(true);
 				}
 			}
 		});
 		TypeComboBox.setBounds(135, 129, 267, 23);
-		
+
 		subPanel.add(TypeComboBox);
 		TypeComboBox.setEnabled(false);
 
 		ActionListener insertModeListener = e -> {
 			ButtonModel selectedModel = group.getSelection();
 			insertType = TypeComboBox.getSelectedItem().toString();
-			
-			if(selectedNode == FileData.document.getDocumentElement()) {
-				if(insertType != "ATTRIBUTE") {
-					JOptionPane.showMessageDialog(null, "The following insertion is not possible from the root node.", null, JOptionPane.WARNING_MESSAGE);
+
+			if (selectedNode == FileData.document.getDocumentElement()) {
+				if (insertType != "ATTRIBUTE") {
+					JOptionPane.showMessageDialog(null, "The following insertion is not possible from the root node.",
+							null, JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 			}
-			
+
 			if (selectedModel == null && insertType != "ATTRIBUTE" && insertType != "TEXT") {
 				JOptionPane.showMessageDialog(null, "please check again", "warining", JOptionPane.WARNING_MESSAGE);
 				return;
@@ -293,17 +289,17 @@ public class InsertFrame {
 		subPanel.add(lblNewLabel);
 	}
 
-	//JTree를 갱신하는 함수
+	// JTree를 갱신하는 함수
 	private void UpdateJTree() {
-		//document 객체를 통해 새롭게 DOM트리를 구성한 후
+		// document 객체를 통해 새롭게 DOM트리를 구성한 후
 		DefaultMutableTreeNode rootNode = DOMTreeBuilder.buildTree(FileData.document.getDocumentElement());
-		//해당 트리 구조를 JTree 현식으로 변환한 다음
+		// 해당 트리 구조를 JTree 현식으로 변환한 다음
 		DefaultTreeModel model = new DefaultTreeModel(rootNode);
-		//생성한 구조를 tree 에 보여준다.
+		// 생성한 구조를 tree 에 보여준다.
 		tree.setModel(model);
 	}
 
-	//모든 필드 초기화
+	// 모든 필드 초기화
 	private void InitAll() {
 		selectedNode = null;
 		insertMode = "";
@@ -320,7 +316,7 @@ public class InsertFrame {
 		InsertButton.setEnabled(false);
 	}
 
-	//JTree에서 특정 노드 선택시, 입력 설정
+	// JTree에서 특정 노드 선택시, 입력 설정
 	private void setInsertInfo(Node node) {
 		selectedNode = node;
 		InsertRadioButton_front.setEnabled(true);
@@ -328,7 +324,7 @@ public class InsertFrame {
 		TypeComboBox.setEnabled(true);
 	}
 
-	//삽입할 노드 타입에 따라서 필드 값 활성화 혹은 비활성화
+	// 삽입할 노드 타입에 따라서 필드 값 활성화 혹은 비활성화
 	private void InsertSet() {
 		InsertButton.setEnabled(true);
 		switch (insertType) {
@@ -348,7 +344,7 @@ public class InsertFrame {
 		}
 	}
 
-	//삽입 모드 선택
+	// 삽입 모드 선택
 	private void Insert() {
 
 		switch (insertType) {
@@ -368,96 +364,126 @@ public class InsertFrame {
 
 	}
 
-	//element 삽입일 경우
+	// element 삽입일 경우
 	private void InsertElement() {
-		//새로 생성할 요소 노드 생성
-		Element ele = FileData.document.createElement(NameTextField.getText());
-		//생성된 요소 노드에 Text 노드 생성
-		ele.appendChild(FileData.document.createTextNode(""));
-		//같이 삽입될 Text 노드 생성
-		Text text = FileData.document.createTextNode("\n");
+		try {
+			// 새로 생성할 요소 노드 생성
+			Element ele = FileData.document.createElement(NameTextField.getText());
+			// 생성된 요소 노드에 Text 노드 생성
+			ele.appendChild(FileData.document.createTextNode(""));
+			// 같이 삽입될 Text 노드 생성
+			Text text = FileData.document.createTextNode("\n");
 
-		//선택된 노드의 부모 노드를 가져온다.
-		Node ParentNode = selectedNode.getParentNode();
-		if (ParentNode == null) {
-			JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-
-		//특정 element 앞 혹은 뒤에 삽입할 것인지에 따라 삽입 방법을 다르게 수행한다.
-		if ("FRONT".equals(insertMode)) {
-			ParentNode.insertBefore(ele, selectedNode);
-			ParentNode.insertBefore(text, selectedNode);
-			JOptionPane.showMessageDialog(null, "success to insert element front");
-		} else if ("BACK".equals(insertMode)) {
-			Node next = selectedNode.getNextSibling();
-
-			if (next != null) {
-				ParentNode.insertBefore(ele, next);
-				ParentNode.insertBefore(text, next);
-				JOptionPane.showMessageDialog(null, "success to insert element back");
-			} else {
-				ParentNode.appendChild(ele);
-				ParentNode.appendChild(text);
+			// 선택된 노드의 부모 노드를 가져온다.
+			Node ParentNode = selectedNode.getParentNode();
+			if (ParentNode == null) {
+				JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
+				return;
 			}
-		}
 
-		InitAll();
-		UpdateJTree();
+			// 특정 element 앞 혹은 뒤에 삽입할 것인지에 따라 삽입 방법을 다르게 수행한다.
+			if ("FRONT".equals(insertMode)) {
+				ParentNode.insertBefore(ele, selectedNode);
+				ParentNode.insertBefore(text, selectedNode);
+				JOptionPane.showMessageDialog(null, "success to insert element front");
+			} else if ("BACK".equals(insertMode)) {
+				Node next = selectedNode.getNextSibling();
+
+				if (next != null) {
+					ParentNode.insertBefore(ele, next);
+					ParentNode.insertBefore(text, next);
+					JOptionPane.showMessageDialog(null, "success to insert element back");
+				} else {
+					ParentNode.appendChild(ele);
+					ParentNode.appendChild(text);
+				}
+			}
+
+			InitAll();
+			UpdateJTree();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			InitAll();
+			UpdateJTree();
+		}
 	}
 
-	//속성 요소 삽입인 경우
+	// 속성 요소 삽입인 경우
 	private void InsertAtt() {
-		Element ele = (Element) selectedNode;
-		ele.setAttribute(NameTextField.getText(), ValueTextField.getText());
+		try {
+			Element ele = (Element) selectedNode;
+			ele.setAttribute(NameTextField.getText(), ValueTextField.getText());
 
-		InitAll();
-		UpdateJTree();
-		JOptionPane.showMessageDialog(null, "success to insert attribute");
-	}
-	
-	//주석 요소 삽입인 경우
-	private void InsertComment()
-	{
-		Comment com = FileData.document.createComment(ValueTextField.getText());
-		Text text = FileData.document.createTextNode("\n");
-		
-		Node ParentNode = selectedNode.getParentNode();
-		if (ParentNode == null) {
-			JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
-			return;
+			InitAll();
+			UpdateJTree();
+			JOptionPane.showMessageDialog(null, "success to insert attribute");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			InitAll();
+			UpdateJTree();
 		}
+	}
 
-		if ("FRONT".equals(insertMode)) {
-			ParentNode.insertBefore(com, selectedNode);
-			ParentNode.insertBefore(text, selectedNode);
-			JOptionPane.showMessageDialog(null, "success to insert comment front");
-		} else if ("BACK".equals(insertMode)) {
-			Node next = selectedNode.getNextSibling();
+	// 주석 요소 삽입인 경우
+	private void InsertComment() {
+		try {
+			Comment com = FileData.document.createComment(ValueTextField.getText());
+			Text text = FileData.document.createTextNode("\n");
 
-			if (next != null) {
-				ParentNode.insertBefore(com, next);
-				ParentNode.insertBefore(text, next);
-				JOptionPane.showMessageDialog(null, "success to insert comment back");
-			} else {
-				ParentNode.appendChild(com);
-				ParentNode.appendChild(text);
+			Node ParentNode = selectedNode.getParentNode();
+			if (ParentNode == null) {
+				JOptionPane.showMessageDialog(null, "null parent", "", JOptionPane.WARNING_MESSAGE);
+				return;
 			}
-		}
 
-		InitAll();
-		UpdateJTree();
+			if ("FRONT".equals(insertMode)) {
+				ParentNode.insertBefore(com, selectedNode);
+				ParentNode.insertBefore(text, selectedNode);
+				JOptionPane.showMessageDialog(null, "success to insert comment front");
+			} else if ("BACK".equals(insertMode)) {
+				Node next = selectedNode.getNextSibling();
+
+				if (next != null) {
+					ParentNode.insertBefore(com, next);
+					ParentNode.insertBefore(text, next);
+					JOptionPane.showMessageDialog(null, "success to insert comment back");
+				} else {
+					ParentNode.appendChild(com);
+					ParentNode.appendChild(text);
+				}
+			}
+
+			InitAll();
+			UpdateJTree();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			InitAll();
+			UpdateJTree();
+		}
 	}
-	
-	//텍스트 노드 삽입인 경우
-	private void InsertText()
-	{
-		Text textNode = FileData.document.createTextNode(ValueTextField.getText());
-		Element ele = (Element) selectedNode;
-		ele.appendChild(textNode);
-		
-		InitAll();
-		UpdateJTree();
-		JOptionPane.showMessageDialog(null, "success to insert Text");
+
+	// 텍스트 노드 삽입인 경우
+	private void InsertText() {
+		try {
+			Text textNode = FileData.document.createTextNode(ValueTextField.getText());
+			Element ele = (Element) selectedNode;
+			ele.appendChild(textNode);
+
+			InitAll();
+			UpdateJTree();
+			JOptionPane.showMessageDialog(null, "success to insert Text");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			InitAll();
+			UpdateJTree();
+		}
 	}
 }

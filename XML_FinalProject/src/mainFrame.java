@@ -47,7 +47,7 @@ public class MainFrame {
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel TitleLabel = new JLabel("Document Editor");
+		JLabel TitleLabel = new JLabel("XML Document Editor");
 		TitleLabel.setFont(new Font("굴림", Font.PLAIN, 24));
 		TitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		TitleLabel.setBounds(12, 10, 1040, 31);

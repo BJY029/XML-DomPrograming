@@ -49,7 +49,7 @@ public class UpdateFrame {
 	private JTextField AttributeValueField;
 	private JTextField CommentField;
 	private JComboBox AttComboBox;
-	
+
 	private Node selectedNode;
 
 	public void setVisible(boolean b) {
@@ -65,7 +65,7 @@ public class UpdateFrame {
 				toClose.dispose(); // 반드시 명시적으로 닫기
 		});
 	}
-	
+
 	public UpdateFrame() {
 		initialize();
 	}
@@ -116,7 +116,7 @@ public class UpdateFrame {
 				Object userObject = selectedTreeNode.getUserObject();
 
 				if (userObject instanceof Node) {
-					//System.out.println("event activated");
+					// System.out.println("event activated");
 					Node getNode = (Node) userObject;
 
 					selectedNode = getNode;
@@ -125,7 +125,6 @@ public class UpdateFrame {
 			}
 
 		});
-
 
 		JButton UpdateButton = new JButton("Update");
 		UpdateButton.setBounds(226, 678, 97, 23);
@@ -146,81 +145,80 @@ public class UpdateFrame {
 		finBtn.setBounds(922, 676, 170, 25);
 		finBtn.addActionListener(e -> returnToMain());
 		frame.getContentPane().add(finBtn);
-		
+
 		JLabel NodeNameLabel = new JLabel("Node Name");
 		NodeNameLabel.setFont(new Font("굴림", Font.PLAIN, 18));
 		NodeNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		NodeNameLabel.setBounds(604, 108, 121, 30);
 		frame.getContentPane().add(NodeNameLabel);
-		
+
 		JLabel NodeValueLabel = new JLabel("Node Value");
 		NodeValueLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		NodeValueLabel.setFont(new Font("굴림", Font.PLAIN, 18));
 		NodeValueLabel.setBounds(604, 202, 121, 30);
 		frame.getContentPane().add(NodeValueLabel);
-		
+
 		JLabel AttributeNameLabel = new JLabel("Attribute Name");
 		AttributeNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		AttributeNameLabel.setFont(new Font("굴림", Font.PLAIN, 18));
 		AttributeNameLabel.setBounds(604, 291, 121, 30);
 		frame.getContentPane().add(AttributeNameLabel);
-		
+
 		JLabel AttributeValueLabel = new JLabel("Attribute Value");
 		AttributeValueLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		AttributeValueLabel.setFont(new Font("굴림", Font.PLAIN, 18));
 		AttributeValueLabel.setBounds(604, 387, 121, 30);
 		frame.getContentPane().add(AttributeValueLabel);
-		
+
 		JLabel CommentLabel = new JLabel("Comment");
 		CommentLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		CommentLabel.setFont(new Font("굴림", Font.PLAIN, 18));
 		CommentLabel.setBounds(604, 477, 121, 30);
 		frame.getContentPane().add(CommentLabel);
-		
+
 		NodeNameField = new JTextField();
 		NodeNameField.setBounds(737, 107, 243, 35);
 		frame.getContentPane().add(NodeNameField);
 		NodeNameField.setColumns(10);
-		
+
 		NodeValueField = new JTextField();
 		NodeValueField.setColumns(10);
 		NodeValueField.setBounds(737, 201, 243, 35);
 		frame.getContentPane().add(NodeValueField);
-		
+
 		AttributeValueField = new JTextField();
 		AttributeValueField.setColumns(10);
 		AttributeValueField.setBounds(737, 386, 243, 35);
 		frame.getContentPane().add(AttributeValueField);
-		
+
 		CommentField = new JTextField();
 		CommentField.setColumns(10);
 		CommentField.setBounds(737, 476, 243, 35);
 		frame.getContentPane().add(CommentField);
-		
+
 		AttComboBox = new JComboBox();
 		AttComboBox.setBounds(737, 287, 243, 40);
 		AttComboBox.addActionListener(e -> {
 			Object selected = AttComboBox.getSelectedItem();
-			if(selected != null)
-			{
+			if (selected != null) {
 				String[] parts = selected.toString().split(" = ", 2);
 				AttributeValueField.setText(parts[1].trim());
 			}
 		});
 		frame.getContentPane().add(AttComboBox);
 	}
-	
+
 	private void UpdateJTree() {
 		DefaultMutableTreeNode rootNode = DOMTreeBuilder.buildTree(FileData.document.getDocumentElement());
 		DefaultTreeModel model = new DefaultTreeModel(rootNode);
 		tree.setModel(model);
 	}
-	
+
 	private void InitAll() {
 		selectedNode = null;
 
-	    AttComboBox.removeAllItems();
-	    AttComboBox.setEnabled(false);
+		AttComboBox.removeAllItems();
+		AttComboBox.setEnabled(false);
 		NodeNameField.setText("");
 		NodeNameField.setEnabled(false);
 		NodeValueField.setText("");
@@ -231,26 +229,27 @@ public class UpdateFrame {
 		CommentField.setEnabled(false);
 		ModifyButton.setEnabled(false);
 	}
-	
-	private void activeAvailableField()
-	{
+
+	private void activeAvailableField() {
 		switch (selectedNode.getNodeType()) {
 		case Node.ELEMENT_NODE:
 			NodeNameField.setText(selectedNode.getNodeName());
 			NodeNameField.setEnabled(true);
 			NodeValueField.setText(selectedNode.getNodeValue());
-			
+
 			NamedNodeMap attrs = selectedNode.getAttributes();
-			for(int i = 0; i < attrs.getLength(); i++) {
+			for (int i = 0; i < attrs.getLength(); i++) {
 				Node attrNode = attrs.item(i);
 				String name = attrNode.getNodeName();
 				String value = attrNode.getNodeValue();
-				AttComboBox.addItem(name+ " = " + value);
+				AttComboBox.addItem(name + " = " + value);
 			}
 			AttComboBox.setEnabled(true);
-			if(attrs.getLength() == 0) AttributeValueField.setEnabled(false);
-			else AttributeValueField.setEnabled(true);
-			
+			if (attrs.getLength() == 0)
+				AttributeValueField.setEnabled(false);
+			else
+				AttributeValueField.setEnabled(true);
+
 			break;
 		case Node.TEXT_NODE:
 			NodeValueField.setText(selectedNode.getNodeValue());
@@ -259,45 +258,50 @@ public class UpdateFrame {
 		case Node.COMMENT_NODE:
 			CommentField.setText(selectedNode.getNodeValue());
 			CommentField.setEnabled(true);
-			break;	
+			break;
 		}
 		ModifyButton.setEnabled(true);
 	}
-	
-	private void ModifyNode()
-	{
-		Document doc = FileData.document;
-		switch (selectedNode.getNodeType()) {
-		case Node.ELEMENT_NODE:
-			String newName = NodeNameField.getText().trim();
-			if(!newName.isEmpty() && !newName.equals(selectedNode.getNodeName()))
-			{
-				doc.renameNode(selectedNode, selectedNode.getNamespaceURI(), newName);
+
+	private void ModifyNode() {
+		try {
+			Document doc = FileData.document;
+			switch (selectedNode.getNodeType()) {
+			case Node.ELEMENT_NODE:
+				String newName = NodeNameField.getText().trim();
+				if (!newName.isEmpty() && !newName.equals(selectedNode.getNodeName())) {
+					doc.renameNode(selectedNode, selectedNode.getNamespaceURI(), newName);
+				}
+
+				Object selectedAtt = AttComboBox.getSelectedItem();
+				String newAttValue = AttributeValueField.getText().trim();
+				if (selectedAtt != null && !newAttValue.isEmpty()) {
+					Element ele = (Element) selectedNode;
+					String[] parts = selectedAtt.toString().split(" = ", 2);
+					String attName = parts[0];
+					ele.setAttribute(attName, newAttValue);
+				}
+				JOptionPane.showMessageDialog(null, "success to modify Element/Attribute");
+				break;
+			case Node.TEXT_NODE:
+				String newValue = NodeValueField.getText().trim();
+				selectedNode.setNodeValue(newValue);
+				JOptionPane.showMessageDialog(null, "success to modify #Text");
+				break;
+			case Node.COMMENT_NODE:
+				selectedNode.setNodeValue(CommentField.getText());
+				JOptionPane.showMessageDialog(null, "success to modify Comment");
+				break;
 			}
-			
-			Object selectedAtt = AttComboBox.getSelectedItem();
-			String newAttValue = AttributeValueField.getText().trim();
-			if(selectedAtt != null && !newAttValue.isEmpty())
-			{
-				Element ele = (Element) selectedNode;
-				String[] parts = selectedAtt.toString().split(" = ", 2);
-				String attName = parts[0];
-				ele.setAttribute(attName, newAttValue);
-			}
-			JOptionPane.showMessageDialog(null, "success to modify Element/Attribute");
-			break;
-		case Node.TEXT_NODE:
-			String newValue = NodeValueField.getText().trim();
-			selectedNode.setNodeValue(newValue);
-			JOptionPane.showMessageDialog(null, "success to modify #Text");
-			break;
-		case Node.COMMENT_NODE:
-			selectedNode.setNodeValue(CommentField.getText());
-			JOptionPane.showMessageDialog(null, "success to modify Comment");
-			break;	
+
+			InitAll();
+			UpdateJTree();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			InitAll();
+			UpdateJTree();
 		}
-		
-		InitAll();
-		UpdateJTree();
 	}
 }

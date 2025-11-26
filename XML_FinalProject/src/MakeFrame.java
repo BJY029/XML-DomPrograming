@@ -229,15 +229,20 @@ public class MakeFrame {
 
 		String[] TypeList = { "ELEMENT", "CHILD ELEMENT", "ATTRIBUTE", "TEXT", "COMMENT" };
 		TypeComboBox = new JComboBox(TypeList);
+		//콤보박스의 선택된 데이터가 변경시 발생되는 이벤트
 		TypeComboBox.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
+				//선택된 아이템의 이름 불러오기
 				String selected = TypeComboBox.getSelectedItem().toString();
+				//만약 선택된 이름이 Attribute, Text, Child Element인 경우
 				if (selected.equals("ATTRIBUTE") || selected.equals("TEXT") || selected.equals("CHILD ELEMENT")) {
+					//해당 옵션은 앞/뒤에 삽입하는 개념이 아니기 때문에 라디오 버튼을 비활성화하고 초기화한다.
 					group.clearSelection();
 					InsertRadioButton_front.setEnabled(false);
 					InsertRadioButton_back.setEnabled(false);
 				} else {
+					//Element, Comment는 어디에 삽입할지(front, back) 선택한다
 					InsertRadioButton_front.setEnabled(true);
 					InsertRadioButton_back.setEnabled(true);
 				}
@@ -248,28 +253,38 @@ public class MakeFrame {
 		subPanel.add(TypeComboBox);
 		TypeComboBox.setEnabled(false);
 
+		//모드 삽입 버튼에 장착될 이벤트 함수
 		ActionListener insertModeListener = e -> {
+			//라디오 버튼 그룹에서 선택된 값(앞/뒤 삽입) 불러오기
 			ButtonModel selectedModel = group.getSelection();
+			//콤보 박스에서 선택된 노드 삽입 타입 불러오기
 			insertType = TypeComboBox.getSelectedItem().toString();
-
+			//만약 선택된 노드가 루트 노드일 경우
 			if (selectedNode == FileData.document.getDocumentElement()) {
+				//삽입 타입이 Element, Text, Comment인 경우
 				if (!insertType.equals("ATTRIBUTE") && !insertType.equals("CHILD ELEMENT")) {
+					//해당 타입은 루트노드에서 삽입이 불가합을 사용자에게 알린다.
 					JOptionPane.showMessageDialog(null, "The following insertion is not possible from the root node.",
 							null, JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 			}
+			//만약 삽입 타입이 Element, Text, Comment 인데 라디오 버튼이 선택되지 않은 경우
 			if (selectedModel == null && !insertType.equals("ATTRIBUTE") && !insertType.equals("TEXT")
 					&& !insertType.equals("CHILD ELEMENT")) {
+				//버튼이 선택되지 않았다고 표기한다.
 				JOptionPane.showMessageDialog(null, "please check again", "warining", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
-
+			
+			//이제 선택 필드들을 비활성화 한다.
 			InsertRadioButton_front.setEnabled(false);
 			InsertRadioButton_back.setEnabled(false);
 			TypeComboBox.setEnabled(false);
 
+			//만약 삽입 타입이 Element 혹은 Comment인 경우
 			if (insertType.equals("ELEMENT") || insertType.equals("COMMENT")) {
+				//삽입 위치에 맞게 적절한 함수를 수행할 수 있도록 삽입 모드를 따로 명시한다.
 				String command = selectedModel.getActionCommand();
 				switch (command) {
 				case "FRONT":
@@ -280,6 +295,7 @@ public class MakeFrame {
 					break;
 				}
 			}
+			//노드 입력 정보 필드를 삽입 타입에 맞게 초기화한다.
 			InsertSet();
 		};
 
@@ -302,38 +318,47 @@ public class MakeFrame {
 		UpdateJTree();
 	}
 
+	//루트 노드를 만드는 함수
 	private boolean MakeRoot() {
 		try {
+			//로드된 문서가 있는 경우
 			if (FileData.document != null) {
+				//해당 문서를 저장할지 물어본다.
 				int result = JOptionPane.showConfirmDialog(frame, "Would you like to save the file you are working on?",
 						"Save?", JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
 					SaveFile.saveFile();
 				}
 			}
-
+			
+			//만들 문서 이름 입력
 			String newFileName = null;
 			newFileName = JOptionPane.showInputDialog(
 					"Enter a name for the new file you want to create.(File name only, omitting extension)");
+			//입력 되지 않거나 cancel 버튼 누르면 Make 취소
 			if (newFileName == null || newFileName.trim().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Make Cancel");
 				returnToMain();
 				return false;
 			}
-
+			
+			//루트 노드 이름 입력
 			String rootName = null;
 			rootName = JOptionPane.showInputDialog("Enter Root Element name");
+			//입력 되지 않거나 cancel 버튼 누르면 Make 취소
 			if (rootName == null || rootName.trim().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Make Cancel");
 				returnToMain();
 				return false;
 			}
 
+			//입력된 문서 이름을 기반으로 문서 경로 설정
 			FileData.uri = newFileName + ".xml";
-
+			
+			//DOM Tree를 구성한다.
 			createNewDocument();
 			Document doc = FileData.document;
-
+			//만든 DOM Tree에 루트 노드를 연결한다.
 			Element rootEle = doc.createElement(rootName);
 			selectedNode = rootEle;
 			doc.appendChild(rootEle);
@@ -349,6 +374,7 @@ public class MakeFrame {
 		}
 	}
 
+	//DOM Tree 구성
 	private void createNewDocument() {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -360,12 +386,14 @@ public class MakeFrame {
 		}
 	}
 
+	//DOM Tree를 기반으로 JTree를 구성한다.
 	private void UpdateJTree() {
 		DefaultMutableTreeNode rootNode = DOMTreeBuilder.buildTree(FileData.document.getDocumentElement());
 		DefaultTreeModel model = new DefaultTreeModel(rootNode);
 		tree.setModel(model);
 	}
 
+	//모든 입력 필드 초기화
 	private void InitAll() {
 		selectedNode = null;
 		insertMode = "";
@@ -382,6 +410,7 @@ public class MakeFrame {
 		InsertButton.setEnabled(false);
 	}
 
+	//JTree에서 노드가 선택되면 모드 입력 필드 활성화
 	private void setInsertInfo(Node node) {
 		selectedNode = node;
 		InsertRadioButton_front.setEnabled(true);
@@ -473,6 +502,7 @@ public class MakeFrame {
 		UpdateJTree();
 	}
 
+	//삽입하는 노드가 자식 요소 삽입인 경우
 	private void InsertElementChild() {
 		Element ele = FileData.document.createElement(NameTextField.getText());
 		Element selectedEle = (Element) selectedNode;
@@ -548,6 +578,7 @@ public class MakeFrame {
 		}
 	}
 
+	//작성한 문서를 메모리에 올린다.
 	private void SaveDocument() {
 		String rootPath = "XMLFiles/" + FileData.uri;
 		Document doc = FileData.document;

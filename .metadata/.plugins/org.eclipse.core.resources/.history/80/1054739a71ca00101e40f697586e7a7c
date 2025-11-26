@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<pj:project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:pj="http://Project.org"
+    xmlns="http://ProjectScene.org"
+    xmlns:comp="http://component.org"
+    xsi:schemaLocation="http://Project.org XML-MiniProject3-BaeJunyup-main.xsd
+                        http://ProjectScene.org XML-MiniProject3-BaeJunyup-import1.xsd
+                        http://component.org XML-MiniProject3-BaeJunyup-import2.xsd
+                        ">
+    <scene name="GameScene1">
+        <object id="obj_GameScene1_01" name="MainCamera">
+            <transform>
+                <position x="0.00" y="1.00" z="-10.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="camera">
+                    <comp:FieldOfView>60</comp:FieldOfView>
+                    <comp:NearClip>0.3</comp:NearClip>
+                    <comp:FarClip>1000</comp:FarClip>
+                </comp:component>
+                <comp:component type="AudioListener" />
+                <comp:component type="Script">
+                    <comp:name>CameraController.cs</comp:name>
+                    <comp:parameter type="float" name="y_rotValue">-10</comp:parameter>
+                    <comp:parameter
+                        type="float" name="lerp_duration">2.0</comp:parameter>
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_GameScene1_02" name="Directional Light">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="Light">
+                    <comp:LightType>Directional</comp:LightType>
+                    <comp:Intensity>1</comp:Intensity>
+                    <comp:Color>#FFFFFF</comp:Color>
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_GameScene1_03" name="Sites">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="Script">
+                    <comp:name>CapturePointManager.cs</comp:name>
+                    <!--no
+                public parameters-->
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_GameScene1_04" name="SiteA" parent="obj_GameScene1_03">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="Script">
+                    <comp:name>CapturePoint.cs</comp:name>
+                    <comp:parameter type="string" name="PointName">A</comp:parameter>
+                    <comp:parameter
+                        type="float" name="CaptureTime">30</comp:parameter>
+                </comp:component>
+                <comp:component type="Rigidbody">
+                    <comp:mass>1</comp:mass>
+                    <comp:isKinematic>true</comp:isKinematic>
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_GameScene1_05" name="SiteA_0" parent="obj_GameScene1_04">
+            <transform>
+                <position x="50.49" y="-3.46" z="71.53" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="24.86" y="1.00" z="26.91" />
+            </transform>
+            <components>
+                <comp:component type="Collider">
+                    <comp:coll_type>Box</comp:coll_type>
+                    <comp:isTrigger>true</comp:isTrigger>
+                </comp:component>
+            </components>
+        </object>
+    </scene>
+
+    <scene name="GameScene2">
+        <object id="obj_GameScene2_01" name="Player">
+            <transform>
+                <position x="1.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="Script">
+                    <comp:name>PlayerController.cs</comp:name>
+                    <comp:parameter type="float" name="MoveSpeed">2</comp:parameter>
+                    <comp:parameter
+                        type="float" name="SprintSpeed">8</comp:parameter>
+                    <comp:parameter type="float"
+                        name="StaminaMaxValue">100</comp:parameter>
+                </comp:component>
+                <comp:component type="Script">
+                    <comp:name>PlayerManager.cs</comp:name>
+                    <comp:parameter type="float" name="SkillTimer">7</comp:parameter>
+                    <comp:parameter
+                        type="float" name="HeartsValue">100</comp:parameter>
+                </comp:component>
+                <comp:component type="Rigidbody">
+                    <comp:mass>50</comp:mass>
+                    <comp:isKinematic>false</comp:isKinematic>
+                </comp:component>
+                <comp:component type="Collider">
+                    <comp:coll_type>Capsule</comp:coll_type>
+                    <comp:isTrigger>true</comp:isTrigger>
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_GameScene2_02" name="Enemy">
+            <transform>
+                <position x="10.00" y="0.00" z="10.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="Script">
+                    <comp:name>EnemyController.cs</comp:name>
+                    <comp:parameter type="float" name="MoveSpeed">3</comp:parameter>
+                    <comp:parameter
+                        type="float" name="SprintSpeed">10</comp:parameter>
+                    <comp:parameter type="float"
+                        name="StaminaMaxValue">120</comp:parameter>
+                </comp:component>
+                <comp:component type="Script">
+                    <comp:name>EnemyManager.cs</comp:name>
+                    <comp:parameter type="float" name="SkillTimer">15</comp:parameter>
+                    <comp:parameter
+                        type="float" name="HeartsValue">150</comp:parameter>
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_GameScene2_03" name="PlayerCamera" parent="obj_GameScene2_01">
+            <transform>
+                <position x="0.00" y="1.00" z="-10.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="camera">
+                    <comp:FieldOfView>60</comp:FieldOfView>
+                    <comp:NearClip>0.3</comp:NearClip>
+                    <comp:FarClip>1000</comp:FarClip>
+                </comp:component>
+                <comp:component type="AudioListener" />
+                <comp:component type="Script">
+                    <comp:name>PlayerCamera.cs</comp:name>
+                    <comp:parameter type="float" name="distance">10.0</comp:parameter>
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_GameScene2_04" name="OakTree">
+            <transform>
+                <position x="0.00" y="0.00" z="5.00" />
+                <rotation x="0.00" y="90.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="MeshRenderer">
+                    <comp:mesh_ref>BigOakTree.fbx</comp:mesh_ref>
+                </comp:component>
+                <comp:component type="Collider">
+                    <comp:coll_type>Capsule</comp:coll_type>
+                    <comp:isTrigger>true</comp:isTrigger>
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_GameScene2_05" name="Potion_Item">
+            <transform>
+                <position x="-7.00" y="0.50" z="7.00" />
+                <rotation x="45.00" y="0.00" z="45.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="MeshRenderer">
+                    <comp:mesh_ref>Position_1.fbx</comp:mesh_ref>
+                </comp:component>
+                <comp:component type="Collider">
+                    <comp:coll_type>Box</comp:coll_type>
+                    <comp:isTrigger>true</comp:isTrigger>
+                </comp:component>
+                <comp:component type="Script">
+                    <comp:name>Potion.cs</comp:name>
+                    <comp:parameter type="float" name="ChargeValue">30</comp:parameter>
+                    <comp:parameter
+                        type="float" name="ResponeTime">15</comp:parameter>
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_GameScene2_06" name="Boost_Item">
+            <transform>
+                <position x="10.00" y="0.50" z="7.00" />
+                <rotation x="45.00" y="0.00" z="45.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="MeshRenderer">
+                    <comp:mesh_ref>Potion_2.fbx</comp:mesh_ref>
+                </comp:component>
+                <comp:component type="Collider">
+                    <comp:coll_type>Box</comp:coll_type>
+                    <comp:isTrigger>true</comp:isTrigger>
+                </comp:component>
+                <comp:component type="Script">
+                    <comp:name>Boost.cs</comp:name>
+                    <comp:parameter type="float" name="BoostRate">1.2</comp:parameter>
+                    <comp:parameter
+                        type="float" name="ResponseTime">25</comp:parameter>
+                </comp:component>
+            </components>
+        </object>
+    </scene>
+
+    <scene name="LobbyScene">
+        <object id="obj_LobbyScene_01" name="Managers">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <!--no
+        component(Empty Object)-->
+            <components />
+        </object>
+
+        <object id="obj_LobbyScene_02" name="ButtonManager" parent="obj_LobbyScene_01">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="Script">
+                    <comp:name>ButtonController.cs</comp:name>
+                    <comp:parameter type="GameObject" name="LoadingPanel"> LoadingObject</comp:parameter>
+                    <comp:parameter type="Button" name="StopButton"> StopBtnObjcet</comp:parameter>
+                </comp:component>
+            </components>
+        </object>
+
+        <object id="obj_LobbyScene_03" name="BGMManager" parent="obj_LobbyScene_01">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="AudioSource">
+                    <comp:audio_ref>bgm_1_2.mp3</comp:audio_ref>
+                    <comp:loop>true</comp:loop>
+                    <comp:playOnAwake>true</comp:playOnAwake>
+                </comp:component>
+                <comp:component
+                    type="Script">
+                    <comp:name>AudioManager.cs</comp:name>
+                    <comp:parameter type="float" name="BgmVolume">0.7</comp:parameter>
+                </comp:component>
+            </components>
+        </object>
+
+
+        <object id="obj_LobbyScene_04" name="MainCanvas">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00" />
+                <rotation x="0.00" y="0.00" z="0.00" />
+                <scale x="1.00" y="1.00" z="1.00" />
+            </transform>
+            <components>
+                <comp:component type="Canvas">
+                    <comp:render_mode>ScreenSpace</comp:render_mode>
+                </comp:component>
+                <comp:component type="CanvasScaler">
+                    <comp:scale_mode>Screen</comp:scale_mode>
+                </comp:component>
+            </components>
+        </object>
+    </scene>
+</pj:project>

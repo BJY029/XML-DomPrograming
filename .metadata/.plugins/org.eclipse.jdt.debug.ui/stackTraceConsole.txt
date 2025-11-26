@@ -1,0 +1,6 @@
+catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			InitAll();
+			UpdateJTree();
+		}

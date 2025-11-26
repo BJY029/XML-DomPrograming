@@ -129,15 +129,17 @@ public class DeleteFrame {
 		tree.setModel(model);
 	}
 	
+	//노드 삭제 함수
 	private void DeleteNode()
 	{
+		//선택된 노드의 타입을 받아온다.
 		int type = selectedNode.getNodeType();
-		
+		//루트 노드가 선택된 경우 삭제를 막는다.
 		if(type == Node.ELEMENT_NODE && selectedNode == FileData.document.getDocumentElement()) {
 			JOptionPane.showMessageDialog(null, "The root element cannot be deleted.", "Warning", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
-		
+		//선택된 노드의 부모 노드를 가져온다.
 		Node parent = selectedNode.getParentNode();
 		if(parent == null)
 		{
@@ -145,14 +147,18 @@ public class DeleteFrame {
 			return;
 		}
 		
+		//선택된 노드가 Element 노드인 경우
 		if(type == Node.ELEMENT_NODE) {
+			//해당 노드를 Element 노들 변환
 			Element ele = (Element)selectedNode;
+			//해당 노드에 달린 Attribute들을 모두 불러오기
 			NamedNodeMap atts = ele.getAttributes();
 			boolean isAttDeleted = false;
-			
+			//attribute가 하나 이상 있는 경우
 			if(atts != null && atts.getLength() > 0)
 			{
 				//속성값 부터 삭제할지 물어본다.
+				//삭제는 뒤에서부터 수행한다.
 				for(int i = atts.getLength() - 1; i >= 0; i--)
 				{
 					Node att = atts.item(i);
@@ -168,8 +174,10 @@ public class DeleteFrame {
 				}
 			}
 			
+			//최종적으로 요소 자체를 삭제할 지 묻는다.
 			int choice = JOptionPane.showConfirmDialog(frame, "Delete Element \'" + ele.getNodeName() + "\'?","Confirm Element Deletion", JOptionPane.YES_NO_OPTION);
 			if(choice == JOptionPane.YES_OPTION) {
+				//부모 노드로부터 해당되는 노드의 인덱스를 찾는다.
 				int idx = -1;
 				NodeList list = parent.getChildNodes();
 				for(int i = 0; i < list.getLength(); i++) {
@@ -178,10 +186,12 @@ public class DeleteFrame {
 						break;
 					}
 				}
+				//찾지 못한 경우 에러 반환
 				if(idx == -1) {
 					JOptionPane.showMessageDialog(null, "No such node", "Warning", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
+				//선택된 노드를 부모노드에서 삭제한다.
 				Node selected_Node = list.item(idx);
 				parent.removeChild(selected_Node);
 				selected_Node = list.item(idx);
@@ -197,8 +207,10 @@ public class DeleteFrame {
 				JOptionPane.showMessageDialog(null, "Deletion completed successfully.");
 			}
 		}
+		//노드 타입이 Text, Comment인 경우
 		else if(type == Node.TEXT_NODE || type == Node.COMMENT_NODE)
 		{
+			//부모 노드로부터 선택된 노드의 인덱스를 찾는다.
 			int idx = -1;
 			NodeList list = parent.getChildNodes();
 			for(int i = 0; i < list.getLength(); i++) {
@@ -211,6 +223,7 @@ public class DeleteFrame {
 				JOptionPane.showMessageDialog(null, "No such node", "Warning", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
+			//인덱스 기반 부모노드로부터 선택된 노드를 삭제한다.
 			Node selected_Node = list.item(idx);
 			parent.removeChild(selected_Node);
 			selected_Node = list.item(idx);

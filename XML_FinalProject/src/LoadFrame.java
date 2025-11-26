@@ -3,7 +3,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -11,16 +14,32 @@ import javax.swing.SwingUtilities;
 import java.awt.EventQueue;
 import java.awt.Font;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 public class LoadFrame {
+	public class SimpleErrorHandler implements ErrorHandler{
+		public void warning(SAXParseException e) throws SAXException{
+			System.out.println(e.getMessage());
+		}
+		public void error(SAXParseException e) throws SAXException{
+			System.out.println(e.getMessage());
+		}
+		public void fatalError(SAXParseException e) throws SAXException{
+			System.out.println(e.getMessage());
+		}
+	}
+	
 	private JFrame frame;
 	private JComboBox comboBox;
+	private ButtonGroup group;
 
 	public LoadFrame() {
 		initialize();
@@ -73,13 +92,39 @@ public class LoadFrame {
 		frame.getContentPane().add(comboBox);
 
 		JButton LoadBtn = new JButton("Load");
-		LoadBtn.setBounds(170, 176, 97, 23);
+		LoadBtn.setBounds(171, 218, 97, 23);
 		frame.getContentPane().add(LoadBtn);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(12, 166, 410, 27);
+		frame.getContentPane().add(panel);
+		
+		JRadioButton VaildRadioBtn_1 = new JRadioButton("No Vaildation Check");
+		VaildRadioBtn_1.setFont(new Font("굴림", Font.PLAIN, 10));
+		panel.add(VaildRadioBtn_1);
+		
+		JRadioButton VaildRadioBtn_2 = new JRadioButton("DTD Vaildation Check");
+		VaildRadioBtn_2.setFont(new Font("굴림", Font.PLAIN, 10));
+		panel.add(VaildRadioBtn_2);
+		
+		JRadioButton VaildRadioBtn_3 = new JRadioButton("XSD Vaildation Check");
+		VaildRadioBtn_3.setFont(new Font("굴림", Font.PLAIN, 10));
+		panel.add(VaildRadioBtn_3);
 		LoadBtn.addActionListener(e -> loadAction());
+		
+		
+		group = new ButtonGroup();
+		group.add(VaildRadioBtn_1);
+		group.add(VaildRadioBtn_2);
+		group.add(VaildRadioBtn_3);
+		group.clearSelection();
+		
 	}
 
 	private void loadAction() {
 		try {
+			//라디오 버튼 확인
+			
 			FileData.document = null;
 			FileData.uri = null;
 			
@@ -110,3 +155,5 @@ public class LoadFrame {
 		}
 	}
 }
+
+

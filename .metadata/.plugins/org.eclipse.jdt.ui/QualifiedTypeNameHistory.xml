@@ -10,4 +10,5 @@
     <fullyQualifiedTypeName name="org.w3c.dom.bootstrap.DOMImplementationRegistry"/>
     <fullyQualifiedTypeName name="javax.lang.model.element.Element"/>
     <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+    <fullyQualifiedTypeName name="org.xml.sax.SAXParseException"/>
 </qualifiedTypeNameHistroy>
