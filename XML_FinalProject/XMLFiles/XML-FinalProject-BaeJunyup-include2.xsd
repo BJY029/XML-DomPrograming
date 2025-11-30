@@ -7,7 +7,7 @@
     elementFormDefault="qualified">
 
     <xsd:import namespace="http://component.org"
-        schemaLocation="XML-MiniProject3-BaeJunyup-import2.xsd" />
+        schemaLocation="XML-FinalProject-BaeJunyup-import2.xsd" />
 
     <xsd:element name="transform">
         <xsd:complexType>

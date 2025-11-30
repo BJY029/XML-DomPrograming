@@ -3,6 +3,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -13,8 +15,10 @@ import org.w3c.dom.NodeList;
 import javax.swing.SwingUtilities;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -40,6 +44,7 @@ public class LoadFrame {
 	private JFrame frame;
 	private JComboBox comboBox;
 	private ButtonGroup group;
+	private String vaildation;
 
 	public LoadFrame() {
 		initialize();
@@ -101,17 +106,20 @@ public class LoadFrame {
 		
 		JRadioButton VaildRadioBtn_1 = new JRadioButton("No Vaildation Check");
 		VaildRadioBtn_1.setFont(new Font("굴림", Font.PLAIN, 10));
+		VaildRadioBtn_1.setActionCommand("NoVaildation");
 		panel.add(VaildRadioBtn_1);
 		
 		JRadioButton VaildRadioBtn_2 = new JRadioButton("DTD Vaildation Check");
 		VaildRadioBtn_2.setFont(new Font("굴림", Font.PLAIN, 10));
+		VaildRadioBtn_2.setActionCommand("DTDVaildation");
 		panel.add(VaildRadioBtn_2);
 		
 		JRadioButton VaildRadioBtn_3 = new JRadioButton("XSD Vaildation Check");
 		VaildRadioBtn_3.setFont(new Font("굴림", Font.PLAIN, 10));
+		VaildRadioBtn_3.setActionCommand("XSDVaildation");
 		panel.add(VaildRadioBtn_3);
 		LoadBtn.addActionListener(e -> loadAction());
-		
+
 		
 		group = new ButtonGroup();
 		group.add(VaildRadioBtn_1);
@@ -123,7 +131,12 @@ public class LoadFrame {
 
 	private void loadAction() {
 		try {
-			//라디오 버튼 확인
+			ButtonModel selectedModel = group.getSelection();
+
+			if (selectedModel == null) {
+				JOptionPane.showMessageDialog(null, "check vaildation option", "warining", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			
 			FileData.document = null;
 			FileData.uri = null;
@@ -131,8 +144,22 @@ public class LoadFrame {
 			String uri = "XMLFiles/";
 			uri += comboBox.getSelectedItem().toString().trim();
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			String vaildationMode = selectedModel.getActionCommand();
+			if(vaildationMode.equals("DTDVaildation")) {
+				factory.setValidating(true);
+			}
+			else if(vaildationMode.equals("XSDVaildation")) {
+				SchemaFactory schemaFactory = null;
+				factory.setValidating(false);
+				factory.setNamespaceAware(true);
+				schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+				factory.setSchema(schemaFactory.newSchema(new StreamSource("XMLFiles/"+FileData.mainXSD)));
+			}
+			
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(uri);
+			
+			
 			
 			FileData.document = doc;
 			FileData.uri = uri;

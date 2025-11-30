@@ -7,12 +7,15 @@ public class FileData {
 	public static String uri;
 	//Document 객체 생성
 	public static Document document;
+	public static String mainXSD;
 	
 	//특정 폴더에서 .xml 파일을 읽어서 해당 파일 이름들을 배열로 반환하는 함수
 	public static String[] getXMLFileLists() {
 		File folder = new File("XMLFiles"); // source 폴더 경로
 
 		String[] xmlFiles = folder.list((dir, name) -> name.toLowerCase().endsWith(".xml"));
+		String[] xsdMain = folder.list((dir, name) -> name.toLowerCase().endsWith("main.xsd"));
+		mainXSD = xsdMain[0];
 
 		if(xmlFiles == null) System.out.println("null");
 		if (xmlFiles != null) {

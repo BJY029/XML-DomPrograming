@@ -5,13 +5,16 @@
     xmlns="http://ProjectScene.org"
     elementFormDefault="qualified">
 
-    <xsd:include schemaLocation="XML-MiniProject3-BaeJunyup-include1.xsd" />
-    <xsd:element name="scene">
+    <xsd:include schemaLocation="XML-FinalProject-BaeJunyup-include2.xsd" />
+    <xsd:element name="object">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element ref="object" maxOccurs="unbounded" />
+                <xsd:element ref="transform" />
+                <xsd:element ref="components" />
             </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:ID" use="required" />
             <xsd:attribute name="name" type="xsd:string" use="required" />
+            <xsd:attribute name="parent" type="xsd:IDREF" use="optional" />
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>

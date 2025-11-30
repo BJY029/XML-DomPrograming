@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--!DOCTYPE project SYSTEM "XML-MiniProject3-BaeJunyup-21011627-DTD.dtd"-->
 
 <pj:project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:pj="http://Project.org"
     xmlns="http://ProjectScene.org"
     xmlns:comp="http://component.org"
-    xsi:schemaLocation="http://Project.org XML-MiniProject3-BaeJunyup-main.xsd
-                        http://ProjectScene.org XML-MiniProject3-BaeJunyup-import1.xsd
-                        http://component.org XML-MiniProject3-BaeJunyup-import2.xsd
+    xsi:schemaLocation="http://Project.org XML-FinalProject-BaeJunyup-main.xsd
+                        http://ProjectScene.org XML-FinalProject-BaeJunyup-import1.xsd
+                        http://component.org XML-FinalProject-BaeJunyup-import2.xsd
                         ">
     <scene name="GameScene1">
         <object id="obj_GameScene1_01" name="MainCamera">
