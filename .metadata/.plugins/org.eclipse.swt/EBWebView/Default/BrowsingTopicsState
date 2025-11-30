@@ -6,7 +6,18 @@
       "padded_top_topics_start_index": 0,
       "taxonomy_version": 0,
       "top_topics_and_observing_domains": [  ]
+   }, {
+      "calculation_time": "13408978127658235",
+      "config_version": 0,
+      "model_version": "0",
+      "padded_top_topics_start_index": 0,
+      "taxonomy_version": 0,
+      "top_topics_and_observing_domains": [  ]
    } ],
    "hex_encoded_hmac_key": "70C8EC1917E9A36941A4A88A8FBCF3800413DE7A3044F1E234D6DE769A9A7E11",
+<<<<<<< Updated upstream
    "next_scheduled_calculation_time": "13408822192831225"
+=======
+   "next_scheduled_calculation_time": "13409582927658252"
+>>>>>>> Stashed changes
 }

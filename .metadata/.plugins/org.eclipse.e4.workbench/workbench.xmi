@@ -174,6 +174,11 @@
                 <tags>org.eclipse.e4.secondaryDataStack</tags>
                 <tags>Oomph</tags>
                 <tags>Minimized</tags>
+<<<<<<< Updated upstream
+=======
+                <tags>noFocus</tags>
+                <tags>active</tags>
+>>>>>>> Stashed changes
                 <children xsi:type="advanced:Placeholder" xmi:id="_F8TDPMb6EfCaduGrl2JtTQ" elementId="org.eclipse.ui.views.ProblemView" ref="_F8OKosb6EfCaduGrl2JtTQ" closeable="true">
                   <tags>View</tags>
                   <tags>categoryTag:General</tags>
@@ -247,7 +252,11 @@
       <tags>categoryTag:Help</tags>
     </sharedElements>
     <sharedElements xsi:type="advanced:Area" xmi:id="_F8J5MMb6EfCaduGrl2JtTQ" elementId="org.eclipse.ui.editorss" selectedElement="_F8J5Mcb6EfCaduGrl2JtTQ">
+<<<<<<< Updated upstream
       <children xsi:type="basic:PartStack" xmi:id="_F8J5Mcb6EfCaduGrl2JtTQ" elementId="org.eclipse.e4.primaryDataStack" selectedElement="_KjD3oMdiEfCtlKKlAlH3gA">
+=======
+      <children xsi:type="basic:PartStack" xmi:id="_F8J5Mcb6EfCaduGrl2JtTQ" elementId="org.eclipse.e4.primaryDataStack" selectedElement="_Ch84YMeYEfCujuIu7Ve-WQ">
+>>>>>>> Stashed changes
         <tags>EditorStack</tags>
         <tags>org.eclipse.e4.primaryDataStack</tags>
         <tags>active</tags>
@@ -296,10 +305,15 @@
           <tags>org.eclipse.wb.core.guiEditor</tags>
         </children>
         <children xsi:type="basic:Part" xmi:id="_Ch84YMeYEfCujuIu7Ve-WQ" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="InsertFrame.java" iconURI="platform:/plugin/org.eclipse.wb.core.ui/icons/gui_editor.gif" closeable="true">
+<<<<<<< Updated upstream
           <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.wb.core.guiEditor&quot; name=&quot;InsertFrame.java&quot; partName=&quot;InsertFrame.java&quot; title=&quot;InsertFrame.java&quot; tooltip=&quot;XML_FinalProject/src/InsertFrame.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/XML_FinalProject/src/InsertFrame.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;130&quot; selectionOffset=&quot;7171&quot; selectionTopPixel=&quot;2672&quot;/>&#xD;&#xA;&lt;/editor>"/>
+=======
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.wb.core.guiEditor&quot; name=&quot;InsertFrame.java&quot; partName=&quot;InsertFrame.java&quot; title=&quot;InsertFrame.java&quot; tooltip=&quot;XML_FinalProject/src/InsertFrame.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/XML_FinalProject/src/InsertFrame.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;3535&quot; selectionTopPixel=&quot;1155&quot;/>&#xD;&#xA;&lt;/editor>"/>
+>>>>>>> Stashed changes
           <tags>Editor</tags>
           <tags>removeOnHide</tags>
           <tags>org.eclipse.wb.core.guiEditor</tags>
+          <tags>activeOnClose</tags>
         </children>
         <children xsi:type="basic:Part" xmi:id="_uXcvIMexEfCO8f5uIbWACg" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="UpdateFrame.java" iconURI="platform:/plugin/org.eclipse.wb.core.ui/icons/gui_editor.gif" closeable="true">
           <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.wb.core.guiEditor&quot; name=&quot;UpdateFrame.java&quot; partName=&quot;UpdateFrame.java&quot; title=&quot;UpdateFrame.java&quot; tooltip=&quot;XML_FinalProject/src/UpdateFrame.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/XML_FinalProject/src/UpdateFrame.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;10216&quot; selectionTopPixel=&quot;4148&quot;/>&#xD;&#xA;&lt;/editor>"/>
@@ -502,7 +516,11 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F6E1kMb6EfCaduGrl2JtTQ" elementId="org.eclipse.ui.workbench.file">
         <tags>Draggable</tags>
+<<<<<<< Updated upstream
         <children xsi:type="menu:HandledToolItem" xmi:id="_-k9cwMpoEfCLAevf0gf1kQ" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" command="_FqQQ9Mb6EfCaduGrl2JtTQ"/>
+=======
+        <children xsi:type="menu:HandledToolItem" xmi:id="_SWvs4M3lEfCrR4_L8H3aDQ" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" command="_FqQQ9Mb6EfCaduGrl2JtTQ"/>
+>>>>>>> Stashed changes
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F6E1kcb6EfCaduGrl2JtTQ" elementId="group.edit" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -510,8 +528,13 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F6E1k8b6EfCaduGrl2JtTQ" elementId="org.eclipse.ui.workbench.edit">
         <tags>Draggable</tags>
+<<<<<<< Updated upstream
         <children xsi:type="menu:HandledToolItem" xmi:id="_-k-q4MpoEfCLAevf0gf1kQ" elementId="undo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/undo_edit.png" tooltip="Undo" enabled="false" command="_FqOb48b6EfCaduGrl2JtTQ"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_-k_R8MpoEfCLAevf0gf1kQ" elementId="redo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/redo_edit.png" tooltip="Redo" enabled="false" command="_FqPDHsb6EfCaduGrl2JtTQ"/>
+=======
+        <children xsi:type="menu:HandledToolItem" xmi:id="_SWwT9c3lEfCrR4_L8H3aDQ" elementId="undo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/undo_edit.png" tooltip="Undo" enabled="false" command="_FqOb48b6EfCaduGrl2JtTQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_SWwT9s3lEfCrR4_L8H3aDQ" elementId="redo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/redo_edit.png" tooltip="Redo" enabled="false" command="_FqPDHsb6EfCaduGrl2JtTQ"/>
+>>>>>>> Stashed changes
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F6E1lMb6EfCaduGrl2JtTQ" elementId="additions" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -535,7 +558,11 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F6FcoMb6EfCaduGrl2JtTQ" elementId="org.eclipse.ui.workbench.navigate">
         <tags>Draggable</tags>
+<<<<<<< Updated upstream
         <children xsi:type="menu:HandledToolItem" xmi:id="_-lAgEMpoEfCLAevf0gf1kQ" elementId="org.eclipse.ui.window.pinEditor" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_FqPqdsb6EfCaduGrl2JtTQ"/>
+=======
+        <children xsi:type="menu:HandledToolItem" xmi:id="_SWw7AM3lEfCrR4_L8H3aDQ" elementId="org.eclipse.ui.window.pinEditor" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" enabled="false" type="Check" command="_FqPqdsb6EfCaduGrl2JtTQ"/>
+>>>>>>> Stashed changes
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F6Fcocb6EfCaduGrl2JtTQ" elementId="group.editor" toBeRendered="false">
         <tags>toolbarSeparator</tags>
