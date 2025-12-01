@@ -297,7 +297,7 @@ public class UpdateFrame {
 			InitAll();
 			UpdateJTree();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR",
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			InitAll();

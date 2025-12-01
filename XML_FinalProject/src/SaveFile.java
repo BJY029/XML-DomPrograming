@@ -41,6 +41,7 @@ public class SaveFile {
 			FileData.document = null;
 		} catch (Exception e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

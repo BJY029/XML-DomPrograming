@@ -402,7 +402,7 @@ public class InsertFrame {
 			InitAll();
 			UpdateJTree();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR",
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			InitAll();
@@ -420,7 +420,7 @@ public class InsertFrame {
 			UpdateJTree();
 			JOptionPane.showMessageDialog(null, "success to insert attribute");
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR",
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			InitAll();
@@ -460,7 +460,7 @@ public class InsertFrame {
 			InitAll();
 			UpdateJTree();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR",
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			InitAll();
@@ -479,7 +479,7 @@ public class InsertFrame {
 			UpdateJTree();
 			JOptionPane.showMessageDialog(null, "success to insert Text");
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR",
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR",
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			InitAll();

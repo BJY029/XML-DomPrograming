@@ -365,7 +365,7 @@ public class MakeFrame {
 
 			return true;
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
 			FileData.document = null;
 			FileData.uri = null;
@@ -381,7 +381,7 @@ public class MakeFrame {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			FileData.document = builder.newDocument();
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
 		}
 	}
@@ -601,7 +601,7 @@ public class MakeFrame {
 			JOptionPane.showMessageDialog(null, "success to make new xml file\nfilename = \"" + FileData.uri + "\"");
 			returnToMain();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}

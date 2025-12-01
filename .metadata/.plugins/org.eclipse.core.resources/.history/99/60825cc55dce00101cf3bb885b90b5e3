@@ -1,0 +1,201 @@
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
+
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import javax.swing.SwingUtilities;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
+public class LoadFrame {
+	public class SimpleErrorHandler implements ErrorHandler{
+		@Override
+		public void warning(SAXParseException e) throws SAXException{
+			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, "Vaildation warning Required. Check Console log", "ERROR", JOptionPane.WARNING_MESSAGE);
+			vaildationError = true;
+		}
+		@Override
+		public void error(SAXParseException e) throws SAXException{
+			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, e, "ERROR", JOptionPane.ERROR_MESSAGE);
+			vaildationError = true;
+		}
+		@Override
+		public void fatalError(SAXParseException e) throws SAXException{
+			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, "Vaildation Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			vaildationError = true;
+		}
+	}
+	
+	private JFrame frame;
+	private JComboBox comboBox;
+	private ButtonGroup group;
+	private String vaildation;
+	private boolean vaildationError;
+
+	public LoadFrame() {
+		initialize();
+	}
+
+	public void setVisible(boolean b) {
+		frame.setVisible(b);
+	}
+	
+
+	public void returnToMain() {
+		SwingUtilities.invokeLater(() -> {
+			JFrame toClose = this.frame; // 닫을 대상 보관
+			MainFrame main = new MainFrame();
+			main.setVisible(true); // 새 메인 띄우기
+			if (toClose != null)
+				toClose.dispose(); // 반드시 명시적으로 닫기
+		});
+	}
+
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setLocationRelativeTo(null);
+		
+		if (FileData.document != null) {
+			int result = JOptionPane.showConfirmDialog(frame, "Would you like to save the file you are working on?",
+					"Save?", JOptionPane.YES_NO_OPTION);
+			if (result == JOptionPane.YES_OPTION) {
+				SaveFile.saveFile();
+			}
+		}
+
+		JLabel TitleLabel = new JLabel("Load");
+		TitleLabel.setFont(new Font("굴림", Font.PLAIN, 24));
+		TitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		TitleLabel.setBounds(12, 10, 410, 27);
+		frame.getContentPane().add(TitleLabel);
+
+		JLabel lblNewLabel = new JLabel("Choose the name of the file to load.");
+		lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(12, 79, 410, 29);
+		frame.getContentPane().add(lblNewLabel);
+
+		String[] XMLFiles = FileData.getXMLFileLists();
+		comboBox = new JComboBox(XMLFiles);
+		comboBox.setBounds(86, 118, 260, 23);
+		frame.getContentPane().add(comboBox);
+
+		JButton LoadBtn = new JButton("Load");
+		LoadBtn.setBounds(171, 218, 97, 23);
+		frame.getContentPane().add(LoadBtn);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(12, 166, 410, 27);
+		frame.getContentPane().add(panel);
+		
+		JRadioButton VaildRadioBtn_1 = new JRadioButton("No Vaildation Check");
+		VaildRadioBtn_1.setFont(new Font("굴림", Font.PLAIN, 10));
+		VaildRadioBtn_1.setActionCommand("NoVaildation");
+		panel.add(VaildRadioBtn_1);
+		
+		JRadioButton VaildRadioBtn_2 = new JRadioButton("DTD Vaildation Check");
+		VaildRadioBtn_2.setFont(new Font("굴림", Font.PLAIN, 10));
+		VaildRadioBtn_2.setActionCommand("DTDVaildation");
+		panel.add(VaildRadioBtn_2);
+		
+		JRadioButton VaildRadioBtn_3 = new JRadioButton("XSD Vaildation Check");
+		VaildRadioBtn_3.setFont(new Font("굴림", Font.PLAIN, 10));
+		VaildRadioBtn_3.setActionCommand("XSDVaildation");
+		panel.add(VaildRadioBtn_3);
+		LoadBtn.addActionListener(e -> loadAction());
+
+		
+		group = new ButtonGroup();
+		group.add(VaildRadioBtn_1);
+		group.add(VaildRadioBtn_2);
+		group.add(VaildRadioBtn_3);
+		group.clearSelection();
+		
+	}
+
+	private void loadAction() {
+		try {
+			ButtonModel selectedModel = group.getSelection();
+
+			if (selectedModel == null) {
+				JOptionPane.showMessageDialog(null, "check vaildation option", "warining", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			FileData.document = null;
+			FileData.uri = null;
+			
+			String uri = "XMLFiles/";
+			uri += comboBox.getSelectedItem().toString().trim();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			String vaildationMode = selectedModel.getActionCommand();
+			if(vaildationMode.equals("DTDVaildation")) {
+				factory.setValidating(true);
+			}
+			else if(vaildationMode.equals("XSDVaildation")) {
+				SchemaFactory schemaFactory = null;
+				factory.setValidating(false);
+				factory.setNamespaceAware(true);
+				schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+				factory.setSchema(schemaFactory.newSchema(new StreamSource("XMLFiles/"+FileData.mainXSD)));
+			}
+			
+			vaildationError = false;
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			builder.setErrorHandler(new SimpleErrorHandler());
+			Document doc = builder.parse(uri);
+
+			if(vaildationError) {
+				returnToMain();
+				return;				
+			}
+			
+			FileData.document = doc;
+			FileData.uri = uri;
+			JOptionPane.showMessageDialog(null, "Success to load \"" + uri + "\"");
+			
+			returnToMain();
+		} catch (FactoryConfigurationError e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace(System.err);
+		} catch (ParserConfigurationException e) {
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace(System.err);
+		} catch (SAXException e) {
+			e.printStackTrace(System.err);
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+		} catch (IOException e) {
+			e.printStackTrace(System.err);
+			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+}
+
+

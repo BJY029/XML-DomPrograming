@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+    <scene name="GameScene1">
+        <object id="obj_GameScene1_01" name="MainCamera">
+            <transform>
+                <position x="0.00" y="1.00" z="-10.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="camera">
+                    <FieldOfView>60</FieldOfView>
+                    <NearClip>0.3</NearClip>
+                    <FarClip>1000</FarClip>
+                </component>
+                <component type="AudioListener"/>
+                <component type="Script">
+                    <name>CameraController.cs</name>
+                    <parameter name="y_rotValue" type="float">-10</parameter>
+                    <parameter name="lerp_duration" type="float">2.0</parameter>
+                </component>
+            </components>
+        </object>
+        <object id="obj_GameScene1_02" name="Directional Light">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="Light">
+                    <LightType>Directional</LightType>
+                    <Intensity>1</Intensity>
+                    <Color>#FFFFFF</Color>
+                </component>
+            </components>
+        </object>
+        <object id="obj_GameScene1_03" name="Sites">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="Script">
+                    <name>CapturePointManager.cs</name>
+                    <!--no
+                public parameters-->
+                </component>
+            </components>
+        </object>
+        <object id="obj_GameScene1_04" name="SiteA" parent="obj_GameScene1_03">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="Script">
+                    <name>CapturePoint.cs</name>
+                    <parameter name="PointName" type="string">A</parameter>
+                    <parameter name="CaptureTime" type="float">30</parameter>
+                </component>
+                <component type="Rigidbody">
+                    <Mass>1</Mass>
+                    <IsKinematic>true</IsKinematic>
+                </component>
+            </components>
+        </object>
+        <object id="obj_GameScene1_05" name="SiteA_0" parent="obj_GameScene1_04">
+            <transform>
+                <position x="50.49" y="-3.46" z="71.53"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="24.86" y="1.00" z="26.91"/>
+            </transform>
+            <components>
+                <component type="Collider">
+                    <Coll_Type>box</Coll_Type>
+                    <IsTrigger>true</IsTrigger>
+                </component>
+            </components>
+        </object>
+    </scene>
+    <scene name="GameScene2">
+        <object id="obj_GameScene2_01" name="Player">
+            <transform>
+                <position x="1.00" y="0.00" z="0.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="Script">
+                    <name>PlayerController.cs</name>
+                    <parameter name="MoveSpeed" type="float">2</parameter>
+                    <parameter name="SprintSpeed" type="float">8</parameter>
+                    <parameter name="StaminaMaxValue" type="float">100</parameter>
+                </component>
+                <component type="Script">
+                    <name>PlayerManager.cs</name>
+                    <parameter name="SkillTimer" type="float">7</parameter>
+                    <parameter name="HeartsValue" type="float">100</parameter>
+                </component>
+                <component type="Rigidbody">
+                    <Mass>50</Mass>
+                    <IsKinematic>false</IsKinematic>
+                </component>
+                <component type="Collider">
+                    <Coll_Type>capsule</Coll_Type>
+                    <IsTrigger>true</IsTrigger>
+                </component>
+            </components>
+        </object>
+        <object id="obj_GameScene2_02" name="Enemy">
+            <transform>
+                <position x="10.00" y="0.00" z="10.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="Script">
+                    <name>EnemyController.cs</name>
+                    <parameter name="MoveSpeed" type="float">3</parameter>
+                    <parameter name="SprintSpeed" type="float">10</parameter>
+                    <parameter name="StaminaMaxValue" type="float">120</parameter>
+                </component>
+                <component type="Script">
+                    <name>EnemyManager.cs</name>
+                    <parameter name="SkillTimer" type="float">15</parameter>
+                    <parameter name="HeartsValue" type="float">150</parameter>
+                </component>
+            </components>
+        </object>
+        <object id="obj_GameScene2_03" name="PlayerCamera" parent="obj_GameScene2_01">
+            <transform>
+                <position x="0.00" y="1.00" z="-10.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="camera">
+                    <FieldOfView>60</FieldOfView>
+                    <NearClip>0.3</NearClip>
+                    <FarClip>1000</FarClip>
+                </component>
+                <component type="AudioListener"/>
+                <component type="Script">
+                    <name>PlayerCamera.cs</name>
+                    <parameter name="distance" type="float">10.0</parameter>
+                </component>
+            </components>
+        </object>
+        <object id="obj_GameScene2_04" name="OakTree">
+            <transform>
+                <position x="0.00" y="0.00" z="5.00"/>
+                <rotation x="0.00" y="90.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="MeshRenderer">
+                    <Mesh_ref>BigOakTree.fbx</Mesh_ref>
+                </component>
+                <component type="Collider">
+                    <Coll_Type>capsule</Coll_Type>
+                    <IsTrigger>true</IsTrigger>
+                </component>
+            </components>
+        </object>
+        <object id="obj_GameScene2_05" name="Potion_Item">
+            <transform>
+                <position x="-7.00" y="0.50" z="7.00"/>
+                <rotation x="45.00" y="0.00" z="45.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="MeshRenderer">
+                    <Mesh_ref>Position_1.fbx</Mesh_ref>
+                </component>
+                <component type="Collider">
+                    <Coll_Type>box</Coll_Type>
+                    <IsTrigger>true</IsTrigger>
+                </component>
+                <component type="Script">
+                    <name>Potion.cs</name>
+                    <parameter name="ChargeValue" type="float">30</parameter>
+                    <parameter name="ResponeTime" type="float">15</parameter>
+                </component>
+            </components>
+        </object>
+        <object id="obj_GameScene2_06" name="Boost_Item">
+            <transform>
+                <position x="10.00" y="0.50" z="7.00"/>
+                <rotation x="45.00" y="0.00" z="45.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="MeshRenderer">
+                    <Mesh_ref>Potion_2.fbx</Mesh_ref>
+                </component>
+                <component type="Collider">
+                    <Coll_Type>box</Coll_Type>
+                    <IsTrigger>true</IsTrigger>
+                </component>
+                <component type="Script">
+                    <name>Boost.cs</name>
+                    <parameter name="BoostRate" type="float">1.2</parameter>
+                    <parameter name="ResponseTime" type="float">25</parameter>
+                </component>
+            </components>
+        </object>
+    </scene>
+    <scene name="LobbyScene">
+        <object id="obj_LobbyScene_01" name="Managers">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <!--no
+        component(Empty Object)-->
+            <components/>
+        </object>
+        <object id="obj_LobbyScene_02" name="ButtonManager" parent="obj_LobbyScene_01">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="Script">
+                    <name>ButtonController.cs</name>
+                    <parameter name="LoadingPanel" type="GameObject">LoadingObject</parameter>
+                    <parameter name="StopButton" type="Button">StopBtnObjcet</parameter>
+                </component>
+            </components>
+        </object>
+        <object id="obj_LobbyScene_03" name="BGMManager" parent="obj_LobbyScene_01">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="AudioSource">
+                    <Audio_ref>bgm_1_2.mp3</Audio_ref>
+                    <Loop>true</Loop>
+                    <PlayOnAwake>true</PlayOnAwake>
+                </component>
+                <component type="Script">
+                    <name>AudioManager.cs</name>
+                    <parameter name="BgmVolume" type="float">0.7</parameter>
+                </component>
+            </components>
+        </object>
+        <object id="obj_LobbyScene_04" name="MainCanvas">
+            <transform>
+                <position x="0.00" y="0.00" z="0.00"/>
+                <rotation x="0.00" y="0.00" z="0.00"/>
+                <scale x="1.00" y="1.00" z="1.00"/>
+            </transform>
+            <components>
+                <component type="Canvas">
+                    <Render_Mode>screenSpace</Render_Mode>
+                </component>
+                <component type="CanvasScaler">
+                    <Scale_Mode>screen</Scale_Mode>
+                </component>
+            </components>
+        </object>
+    </scene>
+</project>

@@ -30,14 +30,23 @@ import javax.swing.JRadioButton;
 
 public class LoadFrame {
 	public class SimpleErrorHandler implements ErrorHandler{
+		@Override
 		public void warning(SAXParseException e) throws SAXException{
 			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, "Vaildation Warning!\n" + e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+			vaildationError = true;
 		}
+		@Override
 		public void error(SAXParseException e) throws SAXException{
 			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, "Vaildation Error!\n" + e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+			vaildationError = true;
 		}
+		@Override
 		public void fatalError(SAXParseException e) throws SAXException{
 			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, "Vaildation Error!\n" + e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+			vaildationError = true;
 		}
 	}
 	
@@ -45,6 +54,7 @@ public class LoadFrame {
 	private JComboBox comboBox;
 	private ButtonGroup group;
 	private String vaildation;
+	private boolean vaildationError;
 
 	public LoadFrame() {
 		initialize();
@@ -53,6 +63,7 @@ public class LoadFrame {
 	public void setVisible(boolean b) {
 		frame.setVisible(b);
 	}
+	
 
 	public void returnToMain() {
 		SwingUtilities.invokeLater(() -> {
@@ -93,7 +104,7 @@ public class LoadFrame {
 
 		String[] XMLFiles = FileData.getXMLFileLists();
 		comboBox = new JComboBox(XMLFiles);
-		comboBox.setBounds(86, 118, 260, 23);
+		comboBox.setBounds(22, 118, 391, 23);
 		frame.getContentPane().add(comboBox);
 
 		JButton LoadBtn = new JButton("Load");
@@ -156,10 +167,15 @@ public class LoadFrame {
 				factory.setSchema(schemaFactory.newSchema(new StreamSource("XMLFiles/"+FileData.mainXSD)));
 			}
 			
+			vaildationError = false;
 			DocumentBuilder builder = factory.newDocumentBuilder();
+			builder.setErrorHandler(new SimpleErrorHandler());
 			Document doc = builder.parse(uri);
-			
-			
+
+			if(vaildationError) {
+				returnToMain();
+				return;				
+			}
 			
 			FileData.document = doc;
 			FileData.uri = uri;
@@ -167,18 +183,17 @@ public class LoadFrame {
 			
 			returnToMain();
 		} catch (FactoryConfigurationError e) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace(System.err);
 		} catch (ParserConfigurationException e) {
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace(System.err);
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
 		} catch (SAXException e) {
 			e.printStackTrace(System.err);
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
 			e.printStackTrace(System.err);
-			JOptionPane.showMessageDialog(null, "Error Required. Check Console log", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
