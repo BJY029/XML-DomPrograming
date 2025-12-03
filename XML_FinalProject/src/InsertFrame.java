@@ -396,6 +396,7 @@ public class InsertFrame {
 				} else {
 					ParentNode.appendChild(ele);
 					ParentNode.appendChild(text);
+					JOptionPane.showMessageDialog(null, "success to insert element back");
 				}
 			}
 

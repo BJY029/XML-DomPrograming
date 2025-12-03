@@ -30,6 +30,7 @@ public class SaveFile {
 			writer.getDomConfig().setParameter("format-pretty-print", true);
 			writer.write(FileData.document, output);
 			
+			//실제 파일에 쓰는 단계
 			String uri = FileData.uri;
 			FileWriter fw = new FileWriter(uri);
 			BufferedWriter bw = new BufferedWriter(fw);
